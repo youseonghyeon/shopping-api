@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 @RestController
 public class SearchController {
 
-    @GetMapping("/search")
+    @GetMapping("/search/product")
     public ResponseEntity<List<String>> search(@RequestParam("q") String query, HttpServletRequest request) {
         List<String> list = IntStream.rangeClosed(1, 10).mapToObj(i -> query + i).toList();
         return ResponseEntity.ok(list);

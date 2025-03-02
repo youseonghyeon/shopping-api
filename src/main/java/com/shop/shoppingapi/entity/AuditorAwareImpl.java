@@ -1,6 +1,5 @@
-package com.shop.shoppingapi.service;
+package com.shop.shoppingapi.entity;
 
-import com.shop.shoppingapi.entity.User;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

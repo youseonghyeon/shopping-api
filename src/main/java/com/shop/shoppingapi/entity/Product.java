@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@Getter
 @Entity
+@Getter
 @Table(name = "product")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseEntity {
 
     @Id
@@ -33,5 +33,6 @@ public class Product extends BaseEntity {
     private String category; // 제품 카테고리
 
     private Integer stock; // 재고 수량
+
 
 }

@@ -49,7 +49,7 @@ class ProductControllerTest {
     void getProducts() throws Exception {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Product> products = new PageImpl<>(Collections.emptyList(), pageable, 0);
-        when(productService.getProducts(pageable)).thenReturn(products);
+        when(productService.findProducts(pageable)).thenReturn(products);
 
         mockMvc.perform(get("/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -67,7 +67,7 @@ class ProductControllerTest {
 
     @Test
     void createProduct() throws Exception {
-        mockMvc.perform(post("/products"))
+        mockMvc.perform(post("/products/create"))
                 .andExpect(status().isNotImplemented());
     }
 
