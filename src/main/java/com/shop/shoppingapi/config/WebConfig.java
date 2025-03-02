@@ -14,6 +14,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(requestLoggingInterceptor)
-                .addPathPatterns("/**");  // 모든 요청에 대해 로깅
+                .addPathPatterns("/**");
     }
 }

@@ -4,5 +4,25 @@ spring:
     url: jdbc:h2:mem:testdb
     username: sa
     password: password
+
 server:
   port: 9000
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
