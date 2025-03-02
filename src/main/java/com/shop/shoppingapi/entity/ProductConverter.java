@@ -11,7 +11,6 @@ public class ProductConverter {
 
     public static Product toEntity(CreateProductRequest request) {
         return new Product(
-                null,
                 request.getName(),
                 request.getTitleImage(),
                 request.getTitle(),
@@ -23,6 +22,6 @@ public class ProductConverter {
     }
 
     public static Product toEntity(String name, String titleImage, String title, BigDecimal price, String description, String category, Integer stock) {
-        return new Product(null, name, titleImage, title, price, description, category, stock);
+        return new Product(name, titleImage, title, price, description, category, stock);
     }
 }

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -34,5 +36,17 @@ public class Product extends BaseEntity {
 
     private Integer stock; // 재고 수량
 
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<Review> review = new ArrayList<>();
+
+    public Product(String name, String titleImage, String title, BigDecimal price, String description, String category, Integer stock) {
+        this.name = name;
+        this.titleImage = titleImage;
+        this.title = title;
+        this.price = price;
+        this.description = description;
+        this.category = category;
+        this.stock = stock;
+    }
 
 }

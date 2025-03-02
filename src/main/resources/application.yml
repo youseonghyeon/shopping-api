@@ -4,6 +4,10 @@ spring:
     url: jdbc:h2:mem:testdb
     username: sa
     password: password
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 50
 
 server:
   port: 9000

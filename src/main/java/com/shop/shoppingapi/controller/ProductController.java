@@ -35,13 +35,9 @@ public class ProductController {
 
     @GetMapping("/products")
     public Page<Product> getProducts(Pageable pageable) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return productService.findProducts(pageable);
     }
 
-    @GetMapping("/products/{id}/reviews")
-    public String getReviews(@PathVariable String id) {
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
 
     @PostMapping("/products/create")
     public ResponseEntity<Object> createProduct(@RequestBody CreateProductRequest createProductRequest) {

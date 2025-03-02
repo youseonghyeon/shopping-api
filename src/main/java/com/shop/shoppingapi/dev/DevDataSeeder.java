@@ -45,7 +45,7 @@ public class DevDataSeeder {
             "다루미 맥북에어 그램 스탠드 가방, 블랙, 1개",
             "UGREEN 유그린 1000Mbps USB C 이더넷 어댑터 10Gbps USB3.2 Gen2 5 in 1 USB C 허브 노트북 맥북 윈도우 XPS 아이패드 프로 이더넷 연결용"};
 
-    private String[] productPrices = {"2,000,000", "2,500,000", "1,500,000", "1,200,000", "50,000", "30,000"};
+    private Long[] productPrices = {2000_000L, 2_500_000L, 1_500_000L, 1_200_000L, 50_000L, 30_000L};
 
     private void insertUsers() {
         int mockUserSize = 100;
@@ -61,7 +61,7 @@ public class DevDataSeeder {
     private void insertProducts() {
         int mockProductSize = 100;
         List<Product> list = LongStream.range(0, mockProductSize)
-                .mapToObj(i -> ProductConverter.toEntity(getRandomName(), getRandomImage(), getRandomName(), BigDecimal.valueOf(100000000), "description", "category", 100))
+                .mapToObj(i -> ProductConverter.toEntity(getRandomName(), getRandomImage(), getRandomName(), getRandomPrice(), "description", "category", 100))
                 .toList();
         productRepository.saveAll(list);
     }
@@ -72,6 +72,10 @@ public class DevDataSeeder {
 
     private String getRandomName() {
         return productNames[(int) (Math.random() * productNames.length)];
+    }
+
+    private BigDecimal getRandomPrice() {
+        return BigDecimal.valueOf(productPrices[(int) (Math.random() * productPrices.length)]);
     }
 
 }
