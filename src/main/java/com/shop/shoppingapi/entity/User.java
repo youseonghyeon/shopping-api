@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
@@ -25,10 +25,8 @@ public class User {
 
     // 예시로 하나의 역할(role)만 저장 (복수 권한은 Set<String> 등으로 구현)
     @Column(nullable = false)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    public static User of(String username, String password, String role) {
-        return new User(null, username, password, role);
-    }
 
 }

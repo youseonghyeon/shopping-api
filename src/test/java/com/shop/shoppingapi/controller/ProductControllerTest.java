@@ -3,6 +3,7 @@ package com.shop.shoppingapi.controller;
 import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -46,6 +47,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 목록 조회 테스트")
     void getProducts() throws Exception {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Product> products = new PageImpl<>(Collections.emptyList(), pageable, 0);
@@ -60,18 +62,21 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 리뷰 목록 조회 테스트")
     void getReviews() throws Exception {
         mockMvc.perform(get("/products/{id}/reviews", "1"))
                 .andExpect(status().isNotImplemented());
     }
 
     @Test
+    @DisplayName("상품 생성 테스트")
     void createProduct() throws Exception {
         mockMvc.perform(post("/products/create"))
                 .andExpect(status().isNotImplemented());
     }
 
     @Test
+    @DisplayName("상품 삭제 테스트")
     void createReview() throws Exception {
         mockMvc.perform(post("/products/{id}/reviews", "1"))
                 .andExpect(status().isNotImplemented());
