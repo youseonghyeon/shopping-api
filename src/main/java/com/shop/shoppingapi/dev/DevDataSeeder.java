@@ -1,6 +1,7 @@
 package com.shop.shoppingapi.dev;
 
 import com.shop.shoppingapi.entity.*;
+import com.shop.shoppingapi.entity.converter.ProductConverter;
 import com.shop.shoppingapi.repository.ProductRepository;
 import com.shop.shoppingapi.repository.UserRepository;
 import jakarta.annotation.PostConstruct;

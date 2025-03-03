@@ -8,6 +8,6 @@ public class UserConverter {
     }
 
     public static User toEntity(String username, String password, Role role) {
-        return new User(null, username, password, role);
+        return new User(username, password, "test", "test", role);
     }
 }

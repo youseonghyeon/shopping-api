@@ -1,13 +1,15 @@
 package com.shop.shoppingapi.config;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import org.springframework.context.annotation.Bean;
+import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class EnvConfig {
-    @Bean
-    public Dotenv dotenv() {
-        return Dotenv.load();
+
+    @PostConstruct
+    public void init() {
+        Dotenv dotenv = Dotenv.load();
+        dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
     }
 }
