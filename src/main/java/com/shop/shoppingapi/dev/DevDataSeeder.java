@@ -1,11 +1,15 @@
 package com.shop.shoppingapi.dev;
 
-import com.shop.shoppingapi.entity.*;
+import com.shop.shoppingapi.entity.Product;
+import com.shop.shoppingapi.entity.Role;
+import com.shop.shoppingapi.entity.User;
+import com.shop.shoppingapi.entity.UserConverter;
 import com.shop.shoppingapi.entity.converter.ProductConverter;
 import com.shop.shoppingapi.repository.ProductRepository;
 import com.shop.shoppingapi.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,8 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.LongStream;
 
+@Slf4j
 @Profile("dev")
 @Configuration
 @RequiredArgsConstructor
@@ -27,9 +33,13 @@ public class DevDataSeeder {
     @PostConstruct
     @Transactional
     public void seedData() {
-        insertProducts();
-        insertUsers();
-        // insert etc ...
+        CompletableFuture.runAsync(() -> {
+            log.info("Starting data seeder initialization");
+            insertProducts(100);
+            insertUsers(100);
+            // insert etc ...
+            log.info("Data seeder initialization finished");
+        });
     }
 
     private String[] productImages = {"https://thumbnail8.coupangcdn.com/thumbnails/remote/320x320ex/image/1025_amir_coupang_oct_80k/eb38/aa9d608f2d516bc2ac5dc44a5d07cadaebe11e58409cfd02eea64e1e3d32.jpg",
@@ -48,8 +58,7 @@ public class DevDataSeeder {
 
     private Long[] productPrices = {2000_000L, 2_500_000L, 1_500_000L, 1_200_000L, 50_000L, 30_000L};
 
-    private void insertUsers() {
-        int mockUserSize = 100;
+    private void insertUsers(int mockUserSize) {
         String usernamePrefix = "user";
         String passwordPrefix = "user";
         Role role = Role.USER;
@@ -59,8 +68,7 @@ public class DevDataSeeder {
         userRepository.saveAll(list);
     }
 
-    private void insertProducts() {
-        int mockProductSize = 100;
+    private void insertProducts(int mockProductSize) {
         List<Product> list = LongStream.range(0, mockProductSize)
                 .mapToObj(i -> ProductConverter.toEntity(getRandomName(), getRandomImage(), getRandomName(), getRandomPrice(), "description", "category", 100))
                 .toList();
