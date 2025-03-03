@@ -5,8 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 공통 API 응답 클래스
@@ -46,6 +50,14 @@ public class ApiResponse<T> {
 
     public static ResponseEntity<ApiResponse<Void>> error(String message, HttpStatus status) {
         return ResponseEntity.status(status).body(new ApiResponse<>("FAIL", message, null, null));
+    }
+
+    public static ResponseEntity<ApiResponse<Void>> bindingResultError(String message, BindingResult bindingResult) {
+        Map<String, String> errors = new HashMap<>();
+        for (FieldError error : bindingResult.getFieldErrors()) {
+            errors.put(error.getField(), error.getDefaultMessage());
+        }
+        return ApiResponse.error(message, HttpStatus.BAD_REQUEST, Map.of("errors", errors));
     }
 
 }
