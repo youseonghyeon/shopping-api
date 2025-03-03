@@ -37,8 +37,10 @@ public class ProductService {
 
     public void updateProduct(Long productId, Product productForUpdate) {
         findProduct(productId).ifPresent(product -> {
-           throw new UnsupportedOperationException("Not implemented yet");
+            // TODO: Implement update logic
+            throw new UnsupportedOperationException("Not implemented yet");
         });
+        // TODO: Implement update logic
         throw new UnsupportedOperationException("Not implemented yet");
     }
 }

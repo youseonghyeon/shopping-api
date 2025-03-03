@@ -21,6 +21,7 @@ public class RequestLoggingInterceptor implements HandlerInterceptor {
                 .map(entry -> entry.getKey() + "=" + String.join(",", entry.getValue()))
                 .collect(Collectors.joining("&"));
 
+
         log.info("IP: [{}], URL: [{}], params: [{}]", clientIp, requestUrl, queryParams);
         return true;
     }

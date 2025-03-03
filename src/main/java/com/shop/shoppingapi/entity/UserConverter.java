@@ -3,8 +3,9 @@ package com.shop.shoppingapi.entity;
 import com.shop.shoppingapi.controller.dto.CreateUserRequest;
 
 public class UserConverter {
+
     public static User toEntity(CreateUserRequest createUserRequest) {
-        throw new UnsupportedOperationException("Not implemented");
+        return new User(createUserRequest.getName(), createUserRequest.getPassword(), createUserRequest.getEmail(), createUserRequest.getPhone(), Role.USER);
     }
 
     public static User toEntity(String username, String password, Role role) {
