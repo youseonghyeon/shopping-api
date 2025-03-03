@@ -6,6 +6,7 @@ import com.shop.shoppingapi.entity.UserConverter;
 import com.shop.shoppingapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public Long createUser(CreateUserRequest request) {
         validateDuplicateUser(request.getEmail(), request.getPhone());
-        User newUser = UserConverter.toEntity(request);
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        User newUser = UserConverter.toEntity(request, encodedPassword);
         userRepository.save(newUser);
         return newUser.getId();
     }
