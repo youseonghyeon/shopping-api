@@ -1,66 +1,51 @@
 package com.shop.shoppingapi.controller.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
-
-import static com.shop.shoppingapi.controller.dto.ApiResponse.Status.ERROR;
-import static com.shop.shoppingapi.controller.dto.ApiResponse.Status.SUCCESS;
+import java.time.Instant;
 
 /**
  * 공통 API 응답 클래스
  */
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class ApiResponse<T> {
 
-    private Status status;
+    private final String status;
+    private final String message;
+    private final T data;
+    private final Object errorDetails;
+    private final Instant timestamp;
 
-    private int code;
-
-    private String message;
-
-    private T data;
-
-    private LocalDateTime timestamp;
-
-    public static <T> ApiResponse<T> success(T data) {
-        return ApiResponse.<T>builder()
-                .status(SUCCESS)
-                .code(200)
-                .message("Operation successful")
-                .data(data)
-                .timestamp(LocalDateTime.now())
-                .build();
+    private ApiResponse(String status, String message, T data, Object errorDetails) {
+        this.status = status;
+        this.message = message;
+        this.data = data;
+        this.errorDetails = errorDetails;
+        this.timestamp = Instant.now(); // UTC 시간 기준
     }
 
-
-    public static <T> ApiResponse<T> success(String message, T data) {
-        return ApiResponse.<T>builder()
-                .status(SUCCESS)
-                .code(200)
-                .message(message)
-                .data(data)
-                .timestamp(LocalDateTime.now())
-                .build();
+    // 성공 응답
+    public static <T> ResponseEntity<ApiResponse<T>> success(T data, String message) {
+        return ResponseEntity.ok(new ApiResponse<>("SUCCESS", message, data, null));
     }
 
-    public static <T> ApiResponse<T> error(int code, String message) {
-        return ApiResponse.<T>builder()
-                .status(ERROR)
-                .code(code)
-                .message(message)
-                .timestamp(LocalDateTime.now())
-                .build();
+    public static <T> ResponseEntity<ApiResponse<T>> success(T data) {
+        return ResponseEntity.ok(new ApiResponse<>("SUCCESS", "요청이 성공적으로 처리되었습니다.", data, null));
     }
 
-    public enum Status {
-        SUCCESS, ERROR
+    // 실패 응답
+    public static ResponseEntity<ApiResponse<Void>> error(String message, HttpStatus status, Object errorDetails) {
+        return ResponseEntity.status(status).body(new ApiResponse<>("FAIL", message, null, errorDetails));
     }
+
+    public static ResponseEntity<ApiResponse<Void>> error(String message, HttpStatus status) {
+        return ResponseEntity.status(status).body(new ApiResponse<>("FAIL", message, null, null));
+    }
+
 }

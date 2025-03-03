@@ -1,6 +1,6 @@
 package com.shop.shoppingapi.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.shop.shoppingapi.controller.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +14,9 @@ import java.util.stream.IntStream;
 @RestController
 public class SearchController {
 
-    @GetMapping("/search")
-    public ResponseEntity<List<String>> search(@RequestParam("q") String query, HttpServletRequest request) {
+    @GetMapping("/search/products")
+    public ResponseEntity<ApiResponse<List<String>>> search(@RequestParam("q") String query) {
         List<String> list = IntStream.rangeClosed(1, 10).mapToObj(i -> query + i).toList();
-        return ResponseEntity.ok(list);
+        return ApiResponse.success(list);
     }
 }

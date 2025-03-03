@@ -20,7 +20,7 @@ public class ReviewController {
     @GetMapping("/products/{productId}/reviews")
     public ResponseEntity<ApiResponse<List<Review>>> getReviews(@PathVariable Long productId) {
         List<Review> findReviews = reviewService.findReviewsByProductId(productId);
-        return ResponseEntity.ok(ApiResponse.success(findReviews));
+        return ApiResponse.success(findReviews);
     }
 
 }
