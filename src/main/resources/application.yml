@@ -8,6 +8,7 @@ spring:
     properties:
       hibernate:
         default_batch_fetch_size: 50
+    open-in-view: false
   mail:
     host: smtp.gmail.com
     port: 587

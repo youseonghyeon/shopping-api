@@ -13,6 +13,10 @@ java {
     }
 }
 
+tasks.withType(Test).configureEach {
+    jvmArgs += "-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains("byte-buddy-agent") }}"
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -46,6 +50,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
