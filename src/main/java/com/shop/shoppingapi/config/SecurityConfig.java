@@ -1,17 +1,21 @@
 package com.shop.shoppingapi.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shop.shoppingapi.security.service.JwtTokenProvider;
 import com.shop.shoppingapi.security.filter.JsonUsernamePasswordAuthenticationFilter;
 import com.shop.shoppingapi.security.handler.CustomAuthenticationFailureHandler;
 import com.shop.shoppingapi.security.handler.CustomAuthenticationSuccessHandler;
+import com.shop.shoppingapi.security.handler.CustomLogoutSuccessHandler;
+import com.shop.shoppingapi.security.service.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,11 +50,22 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
+                .logout(logoutStep())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
                 .addFilterBefore(jsonLoginFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    @NotNull
+    private static Customizer<LogoutConfigurer<HttpSecurity>> logoutStep() {
+        return logout -> logout.logoutUrl("/logout")
+                .logoutUrl("/logout")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessHandler(new CustomLogoutSuccessHandler());
     }
 
     @Bean

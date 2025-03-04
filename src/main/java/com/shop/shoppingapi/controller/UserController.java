@@ -24,6 +24,11 @@ public class UserController {
 
     private final UserService userService;
 
+    @GetMapping("/me")
+    public ResponseEntity<? extends ApiResponse<?>> me() {
+        return ApiResponse.success("사용자 정보를 조회하였습니다.", "사용자 정보를 조회하였습니다.");
+    }
+
     @PostMapping("/signup")
     public ResponseEntity<? extends ApiResponse<?>> signup(@Validated @RequestBody CreateUserRequest createUserRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
