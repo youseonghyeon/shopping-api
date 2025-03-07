@@ -1,55 +1,55 @@
 package com.shop.shoppingapi.redis;
 
+import com.shop.shoppingapi.redis.dto.CartItem;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
 public class CartCacheRepository {
 
     private final RedisTemplate<String, Object> redisTemplate;
-    private static final String CART_LIST_KEY_PREFIX = "CART_LIST:";
+    private static final String CART_HASH_KEY_PREFIX = "CART_LIST:";
 
     private String getCartKey(Long userId) {
-        return CART_LIST_KEY_PREFIX + userId;
+        return CART_HASH_KEY_PREFIX + userId;
     }
 
-    // 추가
-    public void addItemToCart(Long userId, Long productId, int quantity) {
-        String cartKey = getCartKey(userId);
-        HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
-        hashOps.put(cartKey, productId, quantity);
+    // 상품 추가 또는 수량 업데이트: Hash의 필드로 productId, 값은 quantity
+    public void addOrUpdateCartItem(Long userId, Long productId, int quantity) {
+        String key = getCartKey(userId);
+        redisTemplate.opsForHash().put(key, productId.toString(), quantity);
     }
 
-    // 조회
-    public Map<Object, Object> getCart(Long userId) {
-        String cartKey = getCartKey(userId);
-        HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
-        return hashOps.entries(cartKey);
+    // 특정 상품의 수량 조회
+    public Integer getCartItemQuantity(Long userId, Long productId) {
+        String key = getCartKey(userId);
+        Object value = redisTemplate.opsForHash().get(key, productId.toString());
+        return value != null ? Integer.valueOf(value.toString()) : null;
     }
 
-    // 삭제
-    public void removeItemFromCart(Long userId, Long productId) {
-        String cartKey = getCartKey(userId);
-        redisTemplate.opsForHash().delete(cartKey, productId);
+    // 전체 장바구니 조회: 키는 productId, 값은 quantity
+    public List<CartItem> getCartItems(Long userId) {
+        String key = getCartKey(userId);
+        Map<Object, Object> entries = redisTemplate.opsForHash().entries(key);
+        return entries.entrySet().stream()
+                .map(entry -> new CartItem(Long.valueOf(entry.getKey().toString()), Integer.parseInt(entry.getValue().toString())))
+                .toList();
     }
 
-    // 전체 삭제
+    // 특정 상품 삭제: productId 필드를 삭제하면 됨
+    public void removeCartItem(Long userId, Long productId) {
+        String key = getCartKey(userId);
+        redisTemplate.opsForHash().delete(key, productId.toString());
+    }
+
+    // 전체 장바구니 삭제
     public void clearCart(Long userId) {
-        String cartKey = getCartKey(userId);
-        redisTemplate.delete(cartKey);
+        String key = getCartKey(userId);
+        redisTemplate.delete(key);
     }
-
-    // 상품 ID 전체 조회
-    public Set<Object> getCartProductIds(Long userId) {
-        String cartKey = getCartKey(userId);
-        return redisTemplate.opsForHash().keys(cartKey);
-    }
-
-
 }

@@ -1,15 +1,16 @@
 package com.shop.shoppingapi.redis;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
+import com.shop.shoppingapi.redis.dto.ProductPrice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.math.BigDecimal;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class ProductPriceCacheRepositoryTest {
@@ -21,57 +22,92 @@ public class ProductPriceCacheRepositoryTest {
     private final Long productId2 = 202L;
 
     @BeforeEach
-    public void setup() {
-        // 테스트 시작 전 해당 상품의 캐시를 삭제해서 깨끗한 상태로 시작
-        productPriceCacheRepository.deleteProductPrice(productId1);
-        productPriceCacheRepository.deleteProductPrice(productId2);
+    public void setUp() {
+        // 테스트 시작 전, 기존 데이터 삭제
+        productPriceCacheRepository.deleteById(productId1);
+        productPriceCacheRepository.deleteById(productId2);
     }
 
     @Test
-    public void testSaveAndGetProductPrice() {
-        // given: 원가격과 할인율 지정 (예: 20% 할인)
-        BigDecimal originalPrice = new BigDecimal("100.00");
-        BigDecimal discountRate = new BigDecimal("0.20");
-        BigDecimal expectedDiscountedPrice = originalPrice.multiply(BigDecimal.ONE.subtract(discountRate));
+    public void testSaveAndFindById() {
+        // given: ProductPrice 인스턴스 생성
+        ProductPrice price = new ProductPrice(
+                productId1,
+                new BigDecimal("100.00"),
+                0.20,
+                new BigDecimal("80.00"),
+                "Test Product",
+                "test_image.jpg"
+        );
 
-        // when: 상품 가격 저장
-        productPriceCacheRepository.saveProductPrice(productId1, originalPrice, discountRate);
+        // when: 저장
+        productPriceCacheRepository.save(price);
 
-        // then: 저장된 데이터를 조회하여 값 검증
-        Map<Object, Object> priceData = productPriceCacheRepository.getProductPrice(productId1);
-        assertNotNull(priceData);
-        assertEquals(originalPrice.toString(), priceData.get("originalPrice"));
-        assertEquals(discountRate.toString(), priceData.get("discountRate"));
-        assertEquals(expectedDiscountedPrice.toString(), priceData.get("discountedPrice"));
-        assertNotNull(priceData.get("lastUpdated"), "lastUpdated 값이 null이면 안됩니다.");
+        // then: 단일 조회 후 값 검증
+        Optional<ProductPrice> retrievedOpt = productPriceCacheRepository.findById(productId1);
+        assertTrue(retrievedOpt.isPresent(), "저장된 상품 가격이 존재해야 합니다.");
+        ProductPrice retrieved = retrievedOpt.get();
+        assertEquals(price.getProductId(), retrieved.getProductId());
+        assertEquals(price.getOriginalPrice(), retrieved.getOriginalPrice());
+        assertEquals(price.getDiscountRate(), retrieved.getDiscountRate());
+        assertEquals(price.getDiscountedPrice(), retrieved.getDiscountedPrice());
+        assertEquals(price.getProductName(), retrieved.getProductName());
+        assertEquals(price.getProductTitleImage(), retrieved.getProductTitleImage());
     }
 
     @Test
-    public void testGetMultipleProductPrices() {
+    public void testFindByIds() {
         // given: 두 개의 상품 가격 저장
-        productPriceCacheRepository.saveProductPrice(productId1, new BigDecimal("200.00"), new BigDecimal("0.10"));
-        productPriceCacheRepository.saveProductPrice(productId2, new BigDecimal("300.00"), new BigDecimal("0.15"));
+        ProductPrice price1 = new ProductPrice(
+                productId1,
+                new BigDecimal("100.00"),
+                0.20,
+                new BigDecimal("80.00"),
+                "Test Product 1",
+                "image1.jpg"
+        );
+        ProductPrice price2 = new ProductPrice(
+                productId2,
+                new BigDecimal("200.00"),
+                0.10,
+                new BigDecimal("180.00"),
+                "Test Product 2",
+                "image2.jpg"
+        );
+        productPriceCacheRepository.save(price1);
+        productPriceCacheRepository.save(price2);
 
         // when: 여러 상품 가격 조회
-        Map<Long, Map<Object, Object>> multiplePrices =
-                productPriceCacheRepository.getMultipleProductPrices(List.of(productId1, productId2));
+        Map<Long, ProductPrice> priceMap = productPriceCacheRepository.findByIds(java.util.List.of(productId1, productId2));
 
-        // then: 두 상품 모두 조회되어야 함
-        assertEquals(2, multiplePrices.size());
-        assertTrue(multiplePrices.containsKey(productId1));
-        assertTrue(multiplePrices.containsKey(productId2));
+        // then: 두 상품이 모두 조회되어야 함
+        assertEquals(2, priceMap.size(), "두 개의 상품 가격이 조회되어야 합니다.");
+        assertTrue(priceMap.containsKey(productId1), "productId1의 상품 가격이 존재해야 합니다.");
+        assertTrue(priceMap.containsKey(productId2), "productId2의 상품 가격이 존재해야 합니다.");
     }
 
     @Test
-    public void testDeleteProductPrice() {
+    public void testDeleteById() {
         // given: 상품 가격 저장
-        productPriceCacheRepository.saveProductPrice(productId1, new BigDecimal("150.00"), new BigDecimal("0.05"));
+        ProductPrice price = new ProductPrice(
+                productId1,
+                new BigDecimal("100.00"),
+                0.20,
+                new BigDecimal("80.00"),
+                "Test Product",
+                "test_image.jpg"
+        );
+        productPriceCacheRepository.save(price);
 
-        // when: 상품 가격 삭제
-        productPriceCacheRepository.deleteProductPrice(productId1);
+        // 저장 확인
+        Optional<ProductPrice> beforeDelete = productPriceCacheRepository.findById(productId1);
+        assertTrue(beforeDelete.isPresent(), "삭제 전 상품 가격은 존재해야 합니다.");
 
-        // then: 삭제 후 조회 결과는 빈 Map이어야 함
-        Map<Object, Object> priceData = productPriceCacheRepository.getProductPrice(productId1);
-        assertTrue(priceData.isEmpty());
+        // when: 삭제
+        productPriceCacheRepository.deleteById(productId1);
+
+        // then: 삭제 후 조회 시 null이어야 함
+        Optional<ProductPrice> afterDelete = productPriceCacheRepository.findById(productId1);
+        assertFalse(afterDelete.isPresent(), "상품 가격이 삭제되어야 합니다.");
     }
 }

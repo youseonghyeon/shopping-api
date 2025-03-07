@@ -36,6 +36,8 @@ public class Product extends BaseEntity {
 
     private Integer stock; // 재고 수량
 
+    private Double discountRate = 0.0;
+
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<Review> review = new ArrayList<>();
 
@@ -49,4 +51,14 @@ public class Product extends BaseEntity {
         this.stock = stock;
     }
 
+    public Product(String name, String titleImage, String title, BigDecimal price, String description, String category, Integer stock, Double discountRate) {
+        this.name = name;
+        this.titleImage = titleImage;
+        this.title = title;
+        this.price = price;
+        this.description = description;
+        this.category = category;
+        this.stock = stock;
+        this.discountRate = discountRate;
+    }
 }
