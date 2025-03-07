@@ -21,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.LongStream;
 
 @Slf4j
-@Profile("dev")
+//@Profile("dev")
 @Configuration
 @RequiredArgsConstructor
 public class DevDataSeeder {

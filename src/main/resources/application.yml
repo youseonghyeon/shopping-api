@@ -18,6 +18,9 @@ spring:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
 
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:"http://localhost"}
+
 server:
   port: 8080
 
@@ -35,11 +38,13 @@ spring:
       host: localhost
       port: 6379
 
-
-
 ---
 
 spring:
   config:
     activate:
       on-profile: prod
+  data:
+    redis:
+      host: localhost
+      port: 6379
