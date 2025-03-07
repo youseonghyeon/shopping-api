@@ -60,8 +60,7 @@ public class SecurityConfig {
 
     @NotNull
     private static Customizer<LogoutConfigurer<HttpSecurity>> logoutStep() {
-        return logout -> logout.logoutUrl("/logout")
-                .logoutUrl("/logout")
+        return logout -> logout.logoutUrl("/api/logout")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .deleteCookies("JSESSIONID")
@@ -86,7 +85,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://192.168.0.17:8080", "http://127.0.0.1:8080", "http://localhost:8080"));
+        configuration.setAllowedOrigins(Arrays.asList("http://127.0.0.1", "http://112.168.224.46", "http://192.168.0.17"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);

@@ -19,6 +19,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class ProductController {
 
     private final ProductService productService;

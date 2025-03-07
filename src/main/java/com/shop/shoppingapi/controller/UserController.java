@@ -2,7 +2,6 @@ package com.shop.shoppingapi.controller;
 
 import com.shop.shoppingapi.controller.dto.ApiResponse;
 import com.shop.shoppingapi.controller.dto.CreateUserRequest;
-import com.shop.shoppingapi.entity.User;
 import com.shop.shoppingapi.repository.UserRepository;
 import com.shop.shoppingapi.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -10,16 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
@@ -40,11 +35,11 @@ public class UserController {
     }
 
 
-
     private final UserRepository userRepository;
+
     @GetMapping("/test")
     public void test() {
-        userRepository.findAll().forEach(a -> log.info("{}",a));
+        userRepository.findAll().forEach(a -> log.info("{}", a));
     }
 
 

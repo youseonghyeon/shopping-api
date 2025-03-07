@@ -11,20 +11,21 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final String LOGIN_END_POINT = "/api/login";
+    private final String LOGIN_CONTENT_TYPE = "application/json";
 
     public JsonUsernamePasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
-        setFilterProcessesUrl("/login"); // JSON 로그인 엔드포인트 지정
+        setFilterProcessesUrl(LOGIN_END_POINT);
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        if ("/login".equals(request.getServletPath()) && "application/json".equals(request.getContentType())) {
+        if (LOGIN_END_POINT.equals(request.getServletPath()) && LOGIN_CONTENT_TYPE.equals(request.getContentType())) {
             try {
                 // 본문이 없는 경우 기본 처리
                 if (request.getContentLength() == 0) {
