@@ -2,7 +2,6 @@ package com.shop.shoppingapi.controller;
 
 import com.shop.shoppingapi.controller.dto.ApiResponse;
 import com.shop.shoppingapi.controller.dto.CreateUserRequest;
-import com.shop.shoppingapi.repository.UserRepository;
 import com.shop.shoppingapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final long SIGNUP_EVENT_POINT = 1_000_000L;
+
 
     @GetMapping("/me")
     public ResponseEntity<? extends ApiResponse<?>> me() {
@@ -29,18 +32,11 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return ApiResponse.bindingResultError("요청 데이터가 올바르지 않습니다.", bindingResult);
         }
-        Long user = userService.createUser(createUserRequest);
-        log.info("Created user with id {}", user);
-        return ApiResponse.success("회원가입을 성공하였습니다.", "회원가입을 성공하였습니다.");
+        Long userId = userService.createUser(createUserRequest);
+        log.info("Created user with id {}", userId);
+
+        userService.addPoints(userId, BigDecimal.valueOf(SIGNUP_EVENT_POINT));
+        String data = "회원가입을 성공하였습니다. " + SIGNUP_EVENT_POINT + "point 가 지급되었습니다.";
+        return ApiResponse.success(data, "회원가입을 성공하였습니다.");
     }
-
-
-    private final UserRepository userRepository;
-
-    @GetMapping("/test")
-    public void test() {
-        userRepository.findAll().forEach(a -> log.info("{}", a));
-    }
-
-
 }

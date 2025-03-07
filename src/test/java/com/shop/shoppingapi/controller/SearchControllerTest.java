@@ -27,7 +27,7 @@ class SearchControllerTest {
     @Test
     @DisplayName("검색 테스트")
     void searchTest() throws Exception {
-        mockMvc.perform(get("/search"))
+        mockMvc.perform(get("/api/search"))
                 .andExpect(status().isOk());
     }
 

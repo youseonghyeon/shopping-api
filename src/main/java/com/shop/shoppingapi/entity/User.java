@@ -3,6 +3,8 @@ package com.shop.shoppingapi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -25,6 +27,8 @@ public class User {
 
     private String phone;
 
+    private BigDecimal point = BigDecimal.ZERO;
+
     // 예시로 하나의 역할(role)만 저장 (복수 권한은 Set<String> 등으로 구현)
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -36,5 +40,9 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.role = role;
+    }
+
+    public void addPoints(BigDecimal bigDecimal) {
+        this.point = this.point.add(bigDecimal);
     }
 }

@@ -4,11 +4,7 @@ spring:
     url: jdbc:h2:mem:testdb
     username: sa
     password: password
-  jpa:
-    properties:
-      hibernate:
-        default_batch_fetch_size: 50
-    open-in-view: false
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -18,28 +14,11 @@ spring:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
 
-server:
-  port: 8080
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: dev
   jpa:
     hibernate:
       ddl-auto: create
+
   data:
     redis:
       host: localhost
       port: 6379
-
-
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: prod
