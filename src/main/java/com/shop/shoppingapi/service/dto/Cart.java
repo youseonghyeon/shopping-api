@@ -1,7 +1,7 @@
 package com.shop.shoppingapi.service.dto;
 
 import com.shop.shoppingapi.redis.dto.CartItem;
-import com.shop.shoppingapi.redis.dto.ProductPrice;
+import com.shop.shoppingapi.redis.dto.SimpleProduct;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -20,15 +20,15 @@ public class Cart {
     private String productName;
     private String productTitleImage;
 
-    public static Cart join(CartItem cartItem, ProductPrice productPrice) {
+    public static Cart join(CartItem cartItem, SimpleProduct simpleProduct) {
         return new Cart(
                 cartItem.getProductId(),
                 cartItem.getQuantity(),
-                productPrice.getOriginalPrice(),
-                productPrice.getDiscountRate(),
-                productPrice.getDiscountedPrice(),
-                productPrice.getProductName(),
-                productPrice.getProductTitleImage()
+                simpleProduct.getOriginalPrice(),
+                simpleProduct.getDiscountRate(),
+                simpleProduct.getDiscountedPrice(),
+                simpleProduct.getProductName(),
+                simpleProduct.getProductTitleImage()
         );
     }
 

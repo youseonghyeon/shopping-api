@@ -1,8 +1,6 @@
 package com.shop.shoppingapi.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.shop.shoppingapi.redis.dto.ProductPrice;
+import com.shop.shoppingapi.redis.dto.SimpleProduct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,8 +35,8 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, ProductPrice> productPriceRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, ProductPrice> template = new RedisTemplate<>();
+    public RedisTemplate<String, SimpleProduct> simpleProductRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, SimpleProduct> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());

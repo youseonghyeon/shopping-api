@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductPrice {
+public class SimpleProduct {
 
     private Long productId;
     private BigDecimal originalPrice;
@@ -26,7 +26,7 @@ public class ProductPrice {
                 || productName == null
                 || productTitleImage == null;
         if (abnormalFlag) {
-            log.error("ProductPrice is abnormal: {}", this);
+            log.error("SimpleProduct is abnormal: {}", this);
         }
         return abnormalFlag;
     }

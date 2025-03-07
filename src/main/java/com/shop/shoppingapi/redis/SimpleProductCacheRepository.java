@@ -1,6 +1,6 @@
 package com.shop.shoppingapi.redis;
 
-import com.shop.shoppingapi.redis.dto.ProductPrice;
+import com.shop.shoppingapi.redis.dto.SimpleProduct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -12,32 +12,32 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class ProductPriceCacheRepository {
+public class SimpleProductCacheRepository {
 
-    private final RedisTemplate<String, ProductPrice> redisTemplate;
+    private final RedisTemplate<String, SimpleProduct> redisTemplate;
     private static final String PRODUCT_PRICE_PREFIX = "PRODUCT_PRICE:";
 
-    private ValueOperations<String, ProductPrice> getValueOps() {
+    private ValueOperations<String, SimpleProduct> getValueOps() {
         return redisTemplate.opsForValue();
     }
 
     // 상품 가격 저장
-    public void save(ProductPrice productPrice) {
-        getValueOps().set(PRODUCT_PRICE_PREFIX + ":" + productPrice.getProductId(), productPrice);
+    public void save(SimpleProduct simpleProduct) {
+        getValueOps().set(PRODUCT_PRICE_PREFIX + ":" + simpleProduct.getProductId(), simpleProduct);
     }
 
     // 단일 상품 가격 조회
-    public Optional<ProductPrice> findById(Long productId) {
+    public Optional<SimpleProduct> findById(Long productId) {
         return Optional.ofNullable(getValueOps().get(PRODUCT_PRICE_PREFIX + ":" + productId));
     }
 
     // 여러 상품 가격 조회
-    public Map<Long, ProductPrice> findByIds(Iterable<Long> productIds) {
-        Map<Long, ProductPrice> priceMap = new HashMap<>();
+    public Map<Long, SimpleProduct> findByIds(Iterable<Long> productIds) {
+        Map<Long, SimpleProduct> priceMap = new HashMap<>();
         for (Long productId : productIds) {
             findById(productId)
-                    .filter(pp -> !pp.abnormalData())
-                    .ifPresent(pp -> priceMap.put(productId, pp));
+                    .filter(sp -> !sp.abnormalData())
+                    .ifPresent(sp -> priceMap.put(productId, sp));
         }
         return priceMap;
     }

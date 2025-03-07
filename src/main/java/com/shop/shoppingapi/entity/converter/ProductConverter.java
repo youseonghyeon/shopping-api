@@ -2,7 +2,7 @@ package com.shop.shoppingapi.entity.converter;
 
 import com.shop.shoppingapi.controller.dto.CreateProductRequest;
 import com.shop.shoppingapi.entity.Product;
-import com.shop.shoppingapi.redis.dto.ProductPrice;
+import com.shop.shoppingapi.redis.dto.SimpleProduct;
 
 import java.math.BigDecimal;
 
@@ -31,13 +31,13 @@ public class ProductConverter {
         return new Product(name, titleImage, title, price, description, category, stock, discountRate);
     }
 
-    public static ProductPrice toProductPriceFromEntity(Product product) {
+    public static SimpleProduct toSimpleProductFromEntity(Product product) {
         BigDecimal price = product.getPrice();
         Double discountRate = product.getDiscountRate();
         if (price == null || discountRate == null) {
             throw new IllegalArgumentException("price or discountRate is null");
         }
         BigDecimal discountedPrice = price.multiply(BigDecimal.ONE.subtract(BigDecimal.valueOf(product.getDiscountRate())));
-        return new ProductPrice(product.getId(), price, discountRate, discountedPrice, product.getName(), product.getTitleImage());
+        return new SimpleProduct(product.getId(), price, discountRate, discountedPrice, product.getName(), product.getTitleImage());
     }
 }
