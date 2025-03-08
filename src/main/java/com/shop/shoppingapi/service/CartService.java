@@ -31,7 +31,7 @@ public class CartService {
     }
 
     public void deleteCartItem(Long userId, List<Long> productIds) {
-        productIds.forEach(id -> cartCacheRepository.removeCartItem(userId, id));
+        productIds.forEach(id -> cartCacheRepository.deleteCartItem(userId, id));
     }
 
     public List<CartResponse> findCarts(Long userId) {

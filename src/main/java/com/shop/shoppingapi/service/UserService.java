@@ -38,10 +38,10 @@ public class UserService {
     }
 
     @Transactional
-    public void addPoints(Long userId, BigDecimal bigDecimal) {
+    public void addPoints(Long userId, int point) {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
-        user.addPoints(bigDecimal);
+        user.addPoints(point);
     }
 
     @Transactional(readOnly = true)

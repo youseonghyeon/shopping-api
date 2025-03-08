@@ -3,8 +3,6 @@ package com.shop.shoppingapi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Entity
 @Table(name = "users")
 @Getter
@@ -27,7 +25,7 @@ public class User {
 
     private String phone;
 
-    private BigDecimal point = BigDecimal.ZERO;
+    private int point = 0;
 
     // 예시로 하나의 역할(role)만 저장 (복수 권한은 Set<String> 등으로 구현)
     @Column(nullable = false)
@@ -42,7 +40,19 @@ public class User {
         this.role = role;
     }
 
-    public void addPoints(BigDecimal bigDecimal) {
-        this.point = this.point.add(bigDecimal);
+    public void addPoints(int point) {
+        if (point < 0) {
+            throw new IllegalArgumentException("포인트는 0 이상이어야 합니다.");
+        }
+        this.point += point;
+    }
+
+    public void usePoints(int point) {
+        if (point < 0) {
+            throw new IllegalArgumentException("사용할 포인트는 0 이상이어야 합니다.");
+        } else if (this.point < point) {
+            throw new IllegalArgumentException("포인트가 부족합니다.");
+        }
+        this.point -= point;
     }
 }

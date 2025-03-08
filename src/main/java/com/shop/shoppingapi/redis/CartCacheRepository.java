@@ -42,9 +42,13 @@ public class CartCacheRepository {
     }
 
     // 특정 상품 삭제: productId 필드를 삭제하면 됨
-    public void removeCartItem(Long userId, Long productId) {
+    public void deleteCartItem(Long userId, Long productId) {
         String key = getCartKey(userId);
         redisTemplate.opsForHash().delete(key, productId.toString());
+    }
+
+    public void deleteCartItems(Long userId, List<Long> productIds) {
+        productIds.forEach(productId -> deleteCartItem(userId, productId));
     }
 
     // 전체 장바구니 삭제

@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 public class UserController {
 
     private final UserService userService;
-    private final long SIGNUP_EVENT_POINT = 1_000_000L;
+    private final Integer SIGNUP_EVENT_POINT = 1_000_000;
 
 
     @GetMapping("/me")
@@ -35,7 +35,7 @@ public class UserController {
         Long userId = userService.createUser(createUserRequest);
         log.info("Created user with id {}", userId);
 
-        userService.addPoints(userId, BigDecimal.valueOf(SIGNUP_EVENT_POINT));
+        userService.addPoints(userId, SIGNUP_EVENT_POINT);
         String data = "회원가입을 성공하였습니다. " + SIGNUP_EVENT_POINT + "point 가 지급되었습니다.";
         return ApiResponse.success(data, "회원가입을 성공하였습니다.");
     }

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.Map;
 
 @SpringBootTest
 public class CartResponseItemCacheRepositoryTest {
@@ -64,7 +63,7 @@ public class CartResponseItemCacheRepositoryTest {
         cartCacheRepository.addOrUpdateCartItem(userId, productId2, 4);
 
         // 상품 101번 삭제
-        cartCacheRepository.removeCartItem(userId, productId1);
+        cartCacheRepository.deleteCartItem(userId, productId1);
 
         // 상품 101번 삭제 후 수량은 null이어야 함
         Integer quantity = cartCacheRepository.getCartItemQuantity(userId, productId1);

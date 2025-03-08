@@ -12,6 +12,6 @@ public class MyRoomResponse {
     private String username;
     private String role;
     private Boolean loggedIn;
-    private BigDecimal point;
+    private int point;
 
 }
