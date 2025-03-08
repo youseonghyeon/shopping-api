@@ -24,7 +24,7 @@ public class ProductConverter {
     }
 
     public static Product toEntity(String name, String titleImage, String title, BigDecimal price, String description, String category, Integer stock) {
-        return toEntity(name, titleImage, title, price, description, category, stock, null);
+        return toEntity(name, titleImage, title, price, description, category, stock, 0.0);
     }
 
     public static Product toEntity(String name, String titleImage, String title, BigDecimal price, String description, String category, Integer stock, Double discountRate) {
