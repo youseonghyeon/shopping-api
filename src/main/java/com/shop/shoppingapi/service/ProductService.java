@@ -28,12 +28,20 @@ public class ProductService {
         return productRepository.findAll(pageable);
     }
 
+    public Page<Product> findProducts(Pageable pageable, String query) {
+        return productRepository.findAllByNameContaining(query, pageable);
+    }
+
     public boolean existsProduct(Long id) {
         return productRepository.existsById(id);
     }
 
     public Optional<Product> findProduct(Long id) {
         return productRepository.findById(id);
+    }
+
+    public List<Product> findProductsByIds(List<Long> productIds) {
+        return productRepository.findAllById(productIds);
     }
 
     public long createProduct(Product product) {

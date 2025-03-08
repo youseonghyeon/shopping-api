@@ -1,6 +1,7 @@
 package com.shop.shoppingapi.controller;
 
-import com.shop.shoppingapi.controller.dto.*;
+import com.shop.shoppingapi.controller.dto.ApiResponse;
+import com.shop.shoppingapi.controller.dto.CustomPagedModelAssembler;
 import com.shop.shoppingapi.controller.dto.product.CreateProductRequest;
 import com.shop.shoppingapi.controller.dto.product.DeleteProductRequest;
 import com.shop.shoppingapi.controller.dto.product.ProductResponse;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -28,6 +30,12 @@ public class ProductController {
     private final ProductService productService;
     private final CustomPagedModelAssembler<ProductResponse> pagedModelAssembler;
 
+    @GetMapping("/products")
+    public ResponseEntity<ApiResponse<PagedModel<ProductResponse>>> getProducts(@PageableDefault(size = 10) Pageable pageable) {
+        Page<Product> products = productService.findProducts(pageable);
+        Page<ProductResponse> productsResponse = products.map(ProductResponse::of);
+        return ApiResponse.success(pagedModelAssembler.toModel(productsResponse));
+    }
 
     @GetMapping("/products/{id}")
     public ResponseEntity<ApiResponse<ProductResponse>> getProduct(@PathVariable Long id) {
@@ -40,13 +48,15 @@ public class ProductController {
         return ApiResponse.success(productResponse);
     }
 
-    @GetMapping("/products")
-    public ResponseEntity<ApiResponse<PagedModel<ProductResponse>>> getProducts(@PageableDefault(size = 10) Pageable pageable) {
-        Page<Product> products = productService.findProducts(pageable);
-        Page<ProductResponse> productsResponse = products.map(ProductResponse::of);
-        return ApiResponse.success(pagedModelAssembler.toModel(productsResponse));
+    @GetMapping("/products/details")
+    public ResponseEntity<? extends ApiResponse<?>> getProductDetails(@RequestParam List<Long> productIds) {
+        List<Product> findProducts = productService.findProductsByIds(productIds);
+        if (findProducts.isEmpty()) {
+            return ApiResponse.error("상품을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+        }
+        List<ProductResponse> list = findProducts.stream().map(ProductResponse::of).toList();
+        return ApiResponse.success(list);
     }
-
 
     @PostMapping("/products/create")
     public ResponseEntity<ApiResponse<Long>> createProduct(@RequestBody CreateProductRequest createProductRequest) {
@@ -67,4 +77,6 @@ public class ProductController {
         log.error("Not implemented yet");
         return ApiResponse.error("Not implemented yet", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
 }
