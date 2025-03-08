@@ -1,4 +1,4 @@
-package com.shop.shoppingapi.controller.dto;
+package com.shop.shoppingapi.controller.dto.mypage;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

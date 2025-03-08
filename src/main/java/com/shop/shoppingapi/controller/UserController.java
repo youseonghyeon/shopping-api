@@ -1,7 +1,7 @@
 package com.shop.shoppingapi.controller;
 
 import com.shop.shoppingapi.controller.dto.ApiResponse;
-import com.shop.shoppingapi.controller.dto.CreateUserRequest;
+import com.shop.shoppingapi.controller.dto.user.CreateUserRequest;
 import com.shop.shoppingapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

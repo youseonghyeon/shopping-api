@@ -2,7 +2,7 @@ package com.shop.shoppingapi.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shop.shoppingapi.controller.dto.CreateUserRequest;
+import com.shop.shoppingapi.controller.dto.user.CreateUserRequest;
 import com.shop.shoppingapi.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

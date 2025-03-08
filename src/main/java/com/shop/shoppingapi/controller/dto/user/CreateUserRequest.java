@@ -1,4 +1,4 @@
-package com.shop.shoppingapi.controller.dto;
+package com.shop.shoppingapi.controller.dto.user;
 
 import com.shop.shoppingapi.aop.FieldMatch;
 import jakarta.validation.constraints.Email;

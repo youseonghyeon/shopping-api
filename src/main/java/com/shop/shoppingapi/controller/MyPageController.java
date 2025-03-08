@@ -1,7 +1,7 @@
 package com.shop.shoppingapi.controller;
 
 import com.shop.shoppingapi.controller.dto.ApiResponse;
-import com.shop.shoppingapi.controller.dto.MyRoomResponse;
+import com.shop.shoppingapi.controller.dto.mypage.MyRoomResponse;
 import com.shop.shoppingapi.entity.User;
 import com.shop.shoppingapi.security.utils.SecurityUtils;
 import com.shop.shoppingapi.service.UserService;

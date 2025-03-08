@@ -1,9 +1,9 @@
 package com.shop.shoppingapi.controller;
 
 import com.shop.shoppingapi.controller.dto.ApiResponse;
+import com.shop.shoppingapi.controller.dto.email.EmailRequest;
 import com.shop.shoppingapi.service.EmailSenderService;
 import jakarta.mail.MessagingException;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,9 +24,4 @@ public class EmailController {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    @Getter
-    public static class EmailRequest {
-        private String email;
-        private String username;
-    }
 }

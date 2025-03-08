@@ -1,6 +1,6 @@
 package com.shop.shoppingapi.service;
 
-import com.shop.shoppingapi.controller.dto.CreateUserRequest;
+import com.shop.shoppingapi.controller.dto.user.CreateUserRequest;
 import com.shop.shoppingapi.entity.User;
 import com.shop.shoppingapi.entity.UserConverter;
 import com.shop.shoppingapi.exception.UserNotFoundException;

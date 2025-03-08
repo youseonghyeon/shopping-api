@@ -1,6 +1,6 @@
 package com.shop.shoppingapi.entity.converter;
 
-import com.shop.shoppingapi.controller.dto.CreateUserRequest;
+import com.shop.shoppingapi.controller.dto.user.CreateUserRequest;
 import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.entity.Role;
 import com.shop.shoppingapi.entity.User;

@@ -1,6 +1,6 @@
 package com.shop.shoppingapi.entity;
 
-import com.shop.shoppingapi.controller.dto.CreateUserRequest;
+import com.shop.shoppingapi.controller.dto.user.CreateUserRequest;
 
 public class UserConverter {
 
