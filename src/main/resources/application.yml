@@ -1,9 +1,4 @@
 spring:
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password: password
   jpa:
     properties:
       hibernate:
@@ -17,7 +12,10 @@ spring:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
-
+  data:
+    redis:
+      host: localhost
+      port: 6379
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost, http://192.168.0.17}
 
@@ -33,10 +31,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
-  data:
-    redis:
-      host: localhost
-      port: 6379
+    database-platform: org.hibernate.dialect.MySQLDialect
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/shopdb?useSSL=false&serverTimezone=UTC
+    username: shopuser
+    password: shop123
 
 ---
 
@@ -44,7 +44,9 @@ spring:
   config:
     activate:
       on-profile: prod
-  data:
-    redis:
-      host: localhost
-      port: 6379
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
