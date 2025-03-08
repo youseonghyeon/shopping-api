@@ -26,10 +26,10 @@ public class CartCacheRepository {
     }
 
     // 특정 상품의 수량 조회
-    public Integer getCartItemQuantity(Long userId, Long productId) {
+    public int getCartItemQuantity(Long userId, Long productId) {
         String key = getCartKey(userId);
         Object value = redisTemplate.opsForHash().get(key, productId.toString());
-        return value != null ? Integer.valueOf(value.toString()) : null;
+        return value != null ? Integer.parseInt(value.toString()) : 0;
     }
 
     // 전체 장바구니 조회: 키는 productId, 값은 quantity

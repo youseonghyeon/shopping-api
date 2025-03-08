@@ -4,6 +4,7 @@ import com.shop.shoppingapi.entity.User;
 import com.shop.shoppingapi.security.model.CustomUserDetails;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,17 +18,19 @@ public class SecurityUtils {
         return Optional.ofNullable(getCurrentUser())
                 .map(CustomUserDetails::user)
                 .map(User::getId)
-                .orElse(null);
+                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException("No authentication credentials found."));
     }
 
     private static CustomUserDetails getCurrentUser() {
         return (CustomUserDetails) Optional.ofNullable(getCurrentAuthentication())
-                .map(Authentication::getPrincipal).orElse(null);
+                .map(Authentication::getPrincipal)
+                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException("No authentication credentials found."));
     }
 
     public static Authentication getCurrentAuthentication() {
         return Optional.ofNullable(SecurityContextHolder.getContext())
-                .map(SecurityContext::getAuthentication).orElse(null);
+                .map(SecurityContext::getAuthentication)
+                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException("No authentication credentials found."));
     }
 
 

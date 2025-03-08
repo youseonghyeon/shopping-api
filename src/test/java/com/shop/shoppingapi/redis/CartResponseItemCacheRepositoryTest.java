@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @SpringBootTest
-public class CartItemCacheRepositoryTest {
+public class CartResponseItemCacheRepositoryTest {
 
     @Autowired
     private CartCacheRepository cartCacheRepository;

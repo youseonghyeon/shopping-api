@@ -1,4 +1,4 @@
-package com.shop.shoppingapi.controller.dto;
+package com.shop.shoppingapi.controller.dto.product;
 
 import com.shop.shoppingapi.entity.Product;
 import lombok.AllArgsConstructor;

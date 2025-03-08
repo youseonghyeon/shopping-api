@@ -1,6 +1,6 @@
 package com.shop.shoppingapi.entity.converter;
 
-import com.shop.shoppingapi.controller.dto.CreateProductRequest;
+import com.shop.shoppingapi.controller.dto.product.CreateProductRequest;
 import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.redis.dto.SimpleProduct;
 

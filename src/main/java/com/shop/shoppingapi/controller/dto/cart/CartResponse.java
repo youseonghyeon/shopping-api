@@ -1,4 +1,4 @@
-package com.shop.shoppingapi.service.dto;
+package com.shop.shoppingapi.controller.dto.cart;
 
 import com.shop.shoppingapi.redis.dto.CartItem;
 import com.shop.shoppingapi.redis.dto.SimpleProduct;
@@ -10,18 +10,18 @@ import java.math.BigDecimal;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Cart {
+public class CartResponse {
+
     private Long productId;
     private int quantity;
     private BigDecimal originalPrice;
     private Double discountRate;
     private BigDecimal discountedPrice;
-
     private String productName;
     private String productTitleImage;
 
-    public static Cart join(CartItem cartItem, SimpleProduct simpleProduct) {
-        return new Cart(
+    public static CartResponse join(CartItem cartItem, SimpleProduct simpleProduct) {
+        return new CartResponse(
                 cartItem.getProductId(),
                 cartItem.getQuantity(),
                 simpleProduct.getOriginalPrice(),

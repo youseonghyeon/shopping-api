@@ -1,6 +1,9 @@
 package com.shop.shoppingapi.controller;
 
 import com.shop.shoppingapi.controller.dto.*;
+import com.shop.shoppingapi.controller.dto.product.CreateProductRequest;
+import com.shop.shoppingapi.controller.dto.product.DeleteProductRequest;
+import com.shop.shoppingapi.controller.dto.product.ProductResponse;
 import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.entity.converter.ProductConverter;
 import com.shop.shoppingapi.service.ProductService;
