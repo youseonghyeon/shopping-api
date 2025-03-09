@@ -38,16 +38,15 @@ public class OrderService {
         validateProductsExist(products, productIds);
 
         // 2. 상품 가격 맵 구성 (상품ID -> 원래 가격)
-        Map<Long, BigDecimal> productPriceMap = products.stream()
-                .collect(Collectors.toMap(Product::getId, Product::getPrice));
+        Map<Long, BigDecimal> discountedPriceMap = products.stream()
+                .collect(Collectors.toMap(Product::getId, Product::getDiscountedPrice));
 
-        // 3. 할인율 적용하여 각 주문 아이템의 총액 계산 (예: 10% 할인 → 할인 계수: 0.9)
-        BigDecimal discountFactor = new BigDecimal("0.9");
-        BigDecimal calculatedItemsTotal = calculateItemsTotal(request.getItems(), productPriceMap, discountFactor);
+        // 3. 상품별 할인율을 적용하여 총 상품 가격 계산
+        BigDecimal calculatedItemsTotal = calculateItemsTotal(request.getItems(), discountedPriceMap);
         validateTotalProductPrice(calculatedItemsTotal, request.getTotalProductPrice());
 
         // 4. 원래 가격 총합과 할인 총액 검증
-        BigDecimal sumOriginalPrices = calculateOriginalSum(request.getItems(), productPriceMap);
+        BigDecimal sumOriginalPrices = calculateOriginalSum(request.getItems(), discountedPriceMap);
         BigDecimal expectedDiscountSum = sumOriginalPrices.subtract(calculatedItemsTotal);
         validateDiscountSum(expectedDiscountSum, request.getDiscountSum());
 
@@ -127,21 +126,18 @@ public class OrderService {
         }
     }
 
-    private BigDecimal calculateItemsTotal(List<SubmitOrderRequest.OrderItemRequest> items,
-                                           Map<Long, BigDecimal> productPriceMap,
-                                           BigDecimal discountFactor) {
+    private BigDecimal calculateItemsTotal(List<SubmitOrderRequest.OrderItemRequest> items, Map<Long, BigDecimal> productPriceMap) {
         BigDecimal total = BigDecimal.ZERO;
         for (SubmitOrderRequest.OrderItemRequest item : items) {
             Long productId = item.getProductId();
-            BigDecimal originalPrice = productPriceMap.get(productId);
-            if (originalPrice == null) {
+            BigDecimal discountedPrice = productPriceMap.get(productId);
+            if (discountedPrice == null) {
                 throw new IllegalArgumentException("상품 정보 누락: " + productId);
             }
-            // 할인 적용 후 단가 = originalPrice * discountFactor
-            BigDecimal expectedUnitPrice = originalPrice.multiply(discountFactor);
             // 예상 총액 = 할인 적용 후 단가 * 수량
-            BigDecimal expectedTotalPrice = expectedUnitPrice.multiply(new BigDecimal(item.getQuantity()));
-            if (expectedTotalPrice.compareTo(item.getPrice()) != 0) {
+            BigDecimal expectedTotalPrice = discountedPrice.multiply(new BigDecimal(item.getQuantity()));
+            BigDecimal multiply = discountedPrice.multiply(new BigDecimal(item.getQuantity()));
+            if (multiply.compareTo(expectedTotalPrice) != 0) {
                 throw new IllegalArgumentException("상품 ID " + productId + "의 주문 금액이 올바르지 않습니다.");
             }
             total = total.add(expectedTotalPrice);

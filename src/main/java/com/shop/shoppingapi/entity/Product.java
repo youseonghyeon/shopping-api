@@ -41,6 +41,10 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<Review> review = new ArrayList<>();
 
+    public BigDecimal getDiscountedPrice() {
+        return price.multiply(BigDecimal.valueOf(1 - discountRate));
+    }
+
     public Product(String name, String titleImage, String title, BigDecimal price, String description, String category, Integer stock) {
         this.name = name;
         this.titleImage = titleImage;
