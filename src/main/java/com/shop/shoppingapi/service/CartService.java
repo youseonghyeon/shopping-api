@@ -1,9 +1,9 @@
 package com.shop.shoppingapi.service;
 
+import com.shop.shoppingapi.controller.dto.cart.CartResponse;
 import com.shop.shoppingapi.redis.CartCacheRepository;
 import com.shop.shoppingapi.redis.dto.CartItem;
 import com.shop.shoppingapi.redis.dto.SimpleProduct;
-import com.shop.shoppingapi.controller.dto.cart.CartResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +18,9 @@ public class CartService {
     private final ProductService productService;
 
     public void addCartItem(Long userId, Long productId, int quantity) {
+        if (!productService.existsProductById(productId)) {
+            throw new IllegalArgumentException("존재하지 않는 상품입니다.");
+        }
         int existingQuantity = cartCacheRepository.getCartItemQuantity(userId, productId);
         cartCacheRepository.addOrUpdateCartItem(userId, productId, existingQuantity + quantity);
     }

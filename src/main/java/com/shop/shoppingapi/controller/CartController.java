@@ -1,27 +1,26 @@
 package com.shop.shoppingapi.controller;
 
 import com.shop.shoppingapi.controller.dto.ApiResponse;
-import com.shop.shoppingapi.controller.dto.cart.UpdateCartRequest;
+import com.shop.shoppingapi.controller.dto.cart.CartResponse;
 import com.shop.shoppingapi.controller.dto.cart.CreateCartRequest;
 import com.shop.shoppingapi.controller.dto.cart.DeleteCartRequest;
+import com.shop.shoppingapi.controller.dto.cart.UpdateCartRequest;
 import com.shop.shoppingapi.security.utils.SecurityUtils;
 import com.shop.shoppingapi.service.CartService;
-import com.shop.shoppingapi.service.ProductService;
-import com.shop.shoppingapi.controller.dto.cart.CartResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class CartController {
 
-    private final ProductService productService;
     private final CartService cartService;
 
     @GetMapping("/cart")
@@ -34,6 +33,8 @@ public class CartController {
     @PostMapping("/cart/create")
     public ResponseEntity<ApiResponse<String>> addCart(@Validated @RequestBody CreateCartRequest createCartRequest) {
         Long userId = SecurityUtils.getUserId();
+        log.info("userId: {} CreateCartRequest: {}", userId, createCartRequest);  // 로그 추가
+
         cartService.addCartItem(userId, createCartRequest.getProductId(), createCartRequest.getQuantity());
         return ApiResponse.success("장바구니에 상품을 추가하였습니다.", "장바구니에 상품을 추가하였습니다.");
     }

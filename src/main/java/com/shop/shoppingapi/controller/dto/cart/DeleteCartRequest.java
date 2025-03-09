@@ -1,10 +1,11 @@
 package com.shop.shoppingapi.controller.dto.cart;
 
-import lombok.Getter;
+import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Getter
+@Data
 public class DeleteCartRequest {
-    private List<Long> productIds;
+    private List<Long> productIds = new ArrayList<>();
 }

@@ -89,4 +89,11 @@ public class ProductService {
         return list.stream().collect(Collectors.toMap(SimpleProduct::getProductId, pp -> pp));
     }
 
+    public Optional<Product> findProductById(Long productId) {
+        return productRepository.findById(productId);
+    }
+
+    public boolean existsProductById(Long productId) {
+        return productRepository.existsById(productId);
+    }
 }

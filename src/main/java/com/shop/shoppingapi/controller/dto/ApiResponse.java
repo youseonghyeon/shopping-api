@@ -20,14 +20,14 @@ import java.util.Map;
 @AllArgsConstructor
 public class ApiResponse<T> {
 
-    private final String status;
+    private final boolean success;
     private final String message;
     private final T data;
     private final Object errorDetails;
     private final Instant timestamp;
 
-    private ApiResponse(String status, String message, T data, Object errorDetails) {
-        this.status = status;
+    private ApiResponse(boolean success, String message, T data, Object errorDetails) {
+        this.success = success;
         this.message = message;
         this.data = data;
         this.errorDetails = errorDetails;
@@ -36,20 +36,20 @@ public class ApiResponse<T> {
 
     // 성공 응답
     public static <T> ResponseEntity<ApiResponse<T>> success(T data, String message) {
-        return ResponseEntity.ok(new ApiResponse<>("SUCCESS", message, data, null));
+        return ResponseEntity.ok(new ApiResponse<>(true, message, data, null));
     }
 
     public static <T> ResponseEntity<ApiResponse<T>> success(T data) {
-        return ResponseEntity.ok(new ApiResponse<>("SUCCESS", "요청이 성공적으로 처리되었습니다.", data, null));
+        return ResponseEntity.ok(new ApiResponse<>(true, "요청이 성공적으로 처리되었습니다.", data, null));
     }
 
     // 실패 응답
     public static ResponseEntity<ApiResponse<Void>> error(String message, HttpStatus status, Object errorDetails) {
-        return ResponseEntity.status(status).body(new ApiResponse<>("FAIL", message, null, errorDetails));
+        return ResponseEntity.status(status).body(new ApiResponse<>(false, message, null, errorDetails));
     }
 
     public static ResponseEntity<ApiResponse<Void>> error(String message, HttpStatus status) {
-        return ResponseEntity.status(status).body(new ApiResponse<>("FAIL", message, null, null));
+        return ResponseEntity.status(status).body(new ApiResponse<>(false, message, null, null));
     }
 
     public static ResponseEntity<ApiResponse<Void>> bindingResultError(String message, BindingResult bindingResult) {

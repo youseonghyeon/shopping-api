@@ -3,6 +3,7 @@ package com.shop.shoppingapi.entity.converter;
 import com.shop.shoppingapi.controller.dto.SubmitOrderRequest;
 import com.shop.shoppingapi.entity.Order;
 import lombok.NonNull;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -59,7 +60,7 @@ public class OrderConverter {
         if (Objects.isNull(value)) {
             throw new IllegalArgumentException(fieldName + " 값이 null일 수 없습니다.");
         }
-        if (value instanceof String && ((String) value).trim().isEmpty()) {
+        if (value instanceof String && !StringUtils.hasText((String) value)) {
             throw new IllegalArgumentException(fieldName + " 값이 비어 있을 수 없습니다.");
         }
         if (value instanceof BigDecimal && ((BigDecimal) value).compareTo(BigDecimal.ZERO) < 0) {

@@ -4,9 +4,9 @@ import com.shop.shoppingapi.controller.dto.SubmitOrderRequest;
 import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.entity.User;
 import com.shop.shoppingapi.repository.ProductRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,7 +19,7 @@ public class OrderValidationService {
 
     private final ProductRepository productRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public void validateOrder(SubmitOrderRequest request) {
 
         // 1. 요청된 상품이 모두 존재하는지 검증
@@ -48,15 +48,16 @@ public class OrderValidationService {
         this.validatePointGreaterThanProductPrice(request.getTotalProductPrice(), usedPoints);
     }
 
-    private void validatePointGreaterThanProductPrice(BigDecimal totalProductPrice, BigDecimal usedPoints) {
-        if (usedPoints.compareTo(totalProductPrice) > 0) {
-            throw new IllegalArgumentException("상품 가격보다 사용하려는 포인트가 많습니다.");
-        }
-    }
-
+    @Transactional(readOnly = true)
     public void validateUserPoint(User user, Integer usedPoints) {
         if (user.getPoint() < usedPoints) {
             throw new IllegalArgumentException("사용 가능한 포인트가 부족합니다.");
+        }
+    }
+
+    private void validatePointGreaterThanProductPrice(BigDecimal totalProductPrice, BigDecimal usedPoints) {
+        if (usedPoints.compareTo(totalProductPrice) > 0) {
+            throw new IllegalArgumentException("상품 가격보다 사용하려는 포인트가 많습니다.");
         }
     }
 
