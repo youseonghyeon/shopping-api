@@ -2,6 +2,9 @@ package com.shop.shoppingapi.controller;
 
 import com.shop.shoppingapi.controller.dto.ApiResponse;
 import com.shop.shoppingapi.controller.dto.user.CreateUserRequest;
+import com.shop.shoppingapi.controller.dto.user.SimpleUserResponse;
+import com.shop.shoppingapi.entity.User;
+import com.shop.shoppingapi.security.utils.SecurityUtils;
 import com.shop.shoppingapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
 
 @Slf4j
 @RestController
@@ -23,8 +24,10 @@ public class UserController {
 
 
     @GetMapping("/me")
-    public ResponseEntity<? extends ApiResponse<?>> me() {
-        return ApiResponse.success("사용자 정보를 조회하였습니다.", "사용자 정보를 조회하였습니다.");
+    public ResponseEntity< ApiResponse<SimpleUserResponse>> me() {
+        Long userId = SecurityUtils.getUserId();
+        User findUser = userService.findById(userId);
+        return ApiResponse.success(SimpleUserResponse.from(findUser), "사용자 정보를 조회하였습니다.");
     }
 
     @PostMapping("/signup")

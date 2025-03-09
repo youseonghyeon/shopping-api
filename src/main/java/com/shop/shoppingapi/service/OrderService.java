@@ -11,12 +11,13 @@ import com.shop.shoppingapi.redis.CartCacheRepository;
 import com.shop.shoppingapi.repository.OrderRepository;
 import com.shop.shoppingapi.repository.ProductRepository;
 import com.shop.shoppingapi.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -75,5 +76,12 @@ public class OrderService {
 
     private String generateOrderNumber() {
         return "ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
+
+    @Transactional(readOnly = true)
+    public Order findOrderById(Long orderId) {
+        Optional<Order> findOrderOptional = orderRepository.findById(orderId);
+        return findOrderOptional
+                .orElseThrow(() -> new IllegalArgumentException("주문 정보가 없습니다."));
     }
 }
