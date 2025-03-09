@@ -71,4 +71,8 @@ public class Order {
     public void clearOrderItems() {
         this.orderItems = new ArrayList<>();
     }
+
+    public void addOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
 }

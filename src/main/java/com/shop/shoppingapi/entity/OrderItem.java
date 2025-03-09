@@ -33,8 +33,8 @@ public class OrderItem {
     @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
-    @Column(name = "discount_rate", nullable = false, precision = 5, scale = 2)
-    private BigDecimal discountRate;
+    @Column(name = "discount_rate", nullable = false, precision = 5)
+    private Double discountRate;
 
     @Column(name = "discounted_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal discountedPrice; // 할인 적용 후 단가 (unitPrice * (1 - discountRate))
