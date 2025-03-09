@@ -5,7 +5,7 @@ import com.shop.shoppingapi.controller.dto.user.CreateUserRequest;
 public class UserConverter {
 
     public static User toEntity(CreateUserRequest createUserRequest, String encodedPassword) {
-        return new User(createUserRequest.getName(), encodedPassword, createUserRequest.getEmail(), createUserRequest.getPhone(), Role.USER);
+        return new User(createUserRequest.getName(), encodedPassword, createUserRequest.getEmail(), createUserRequest.getPhone(), Role.ROLE_USER);
     }
 
     public static User toEntity(String username, String password, Role role) {

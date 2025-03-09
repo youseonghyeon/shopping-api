@@ -16,6 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,8 +44,7 @@ public class ProductController {
         if (product.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        Product findProduct = product.get();
-        ProductResponse productResponse = new ProductResponse(findProduct.getId(), findProduct.getName(), findProduct.getTitleImage(), findProduct.getTitle(), findProduct.getPrice());
+        ProductResponse productResponse = ProductResponse.of(product.get());
         return ApiResponse.success(productResponse);
     }
 
@@ -59,6 +59,7 @@ public class ProductController {
     }
 
     @PostMapping("/products/create")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<ApiResponse<Long>> createProduct(@RequestBody CreateProductRequest createProductRequest) {
         Product entity = ProductConverter.toEntity(createProductRequest);
         long productId = productService.createProduct(entity);
@@ -67,12 +68,14 @@ public class ProductController {
     }
 
     @PostMapping("/products/delete")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<ApiResponse<Void>> deleteProduct(@RequestBody DeleteProductRequest deleteProductRequest) {
         log.error("Not implemented yet");
         return ApiResponse.error("Not implemented yet", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/products/{id}/reviews")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<ApiResponse<Void>> createReview(@PathVariable String id) {
         log.error("Not implemented yet");
         return ApiResponse.error("Not implemented yet", HttpStatus.INTERNAL_SERVER_ERROR);

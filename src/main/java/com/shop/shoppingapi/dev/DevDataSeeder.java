@@ -37,7 +37,6 @@ public class DevDataSeeder {
             log.info("Starting data seeder initialization");
             insertProducts(100);
             insertUsers(100);
-            // insert etc ...
             log.info("Data seeder initialization finished");
         });
     }
@@ -61,7 +60,7 @@ public class DevDataSeeder {
     private void insertUsers(int mockUserSize) {
         String usernamePrefix = "user";
         String passwordPrefix = "user";
-        Role role = Role.USER;
+        Role role = Role.ROLE_USER;
         List<User> list = LongStream.range(0, mockUserSize)
                 .mapToObj(i -> UserConverter.toEntity(usernamePrefix + i, passwordEncoder.encode(passwordPrefix + i), role))
                 .toList();

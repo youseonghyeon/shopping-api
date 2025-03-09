@@ -25,4 +25,32 @@ public record CustomUserDetails(User user) implements UserDetails {
         return user.getUsername();
     }
 
+    public Long getUserId() {
+        return user.getId();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        // TODO DB 필드 추가 후 사용 예정
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        // TODO DB 필드 추가 후 사용 예정
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        // TODO DB 필드 추가 후 사용 예정
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        // TODO DB 필드 추가 후 사용 예정
+        return true;
+    }
+
 }

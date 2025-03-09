@@ -1,6 +1,7 @@
 package com.shop.shoppingapi.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shop.shoppingapi.entity.Role;
 import com.shop.shoppingapi.security.filter.JsonUsernamePasswordAuthenticationFilter;
 import com.shop.shoppingapi.security.handler.CustomAuthenticationFailureHandler;
 import com.shop.shoppingapi.security.handler.CustomAuthenticationSuccessHandler;
@@ -11,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -98,6 +101,16 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        String hierarchy = String.join(" \n ",
+                Role.ROLE_ADMIN.name() + " > " + Role.ROLE_MANAGER.name(),
+                Role.ROLE_MANAGER + " > " + Role.ROLE_SELLER.name(),
+                Role.ROLE_SELLER + " > " + Role.ROLE_USER.name()
+        );
+        return RoleHierarchyImpl.fromHierarchy(hierarchy);
     }
 
 }

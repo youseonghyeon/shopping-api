@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class UserConverter {
 
     public static User toEntity(CreateUserRequest request) {
-        return new User(request.getName(), request.getPassword(), request.getEmail(), request.getPhone(), Role.USER);
+        return new User(request.getName(), request.getPassword(), request.getEmail(), request.getPhone(), Role.ROLE_USER);
     }
 
     public static Product toEntity(String name, String titleImage, String title, BigDecimal price, String description, String category, Integer stock) {

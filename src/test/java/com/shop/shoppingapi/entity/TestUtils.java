@@ -4,9 +4,12 @@ import com.shop.shoppingapi.security.model.CustomUserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class UserTestUtils {
+import java.math.BigDecimal;
+import java.util.ArrayList;
 
-    private UserTestUtils() {
+public class TestUtils {
+
+    private TestUtils() {
     }
 
     public static User createUser(Long userId, String username, String password, String email, String phone) {
@@ -19,5 +22,9 @@ public class UserTestUtils {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return user;
+    }
+
+    public static Product createProduct(Long productId, String name, String titleImage, String title, BigDecimal price) {
+        return new Product(productId, name, titleImage, title, price, "description", "category", 100, 0.0, new ArrayList<>());
     }
 }

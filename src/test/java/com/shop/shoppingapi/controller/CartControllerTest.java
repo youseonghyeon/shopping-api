@@ -5,7 +5,7 @@ import com.shop.shoppingapi.controller.dto.cart.CartResponse;
 import com.shop.shoppingapi.controller.dto.cart.CreateCartRequest;
 import com.shop.shoppingapi.controller.dto.cart.DeleteCartRequest;
 import com.shop.shoppingapi.controller.dto.cart.UpdateCartRequest;
-import com.shop.shoppingapi.entity.UserTestUtils;
+import com.shop.shoppingapi.entity.TestUtils;
 import com.shop.shoppingapi.service.CartService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,7 +49,7 @@ class CartControllerTest {
         objectMapper = new ObjectMapper();
 
         // 로그인 사용자 설정
-        UserTestUtils.login(1L, "testUser", "testPassword", "test@mail.com", "01012345678");
+        TestUtils.login(1L, "testUser", "testPassword", "test@mail.com", "01012345678");
     }
 
     @Test
