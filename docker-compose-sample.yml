@@ -14,6 +14,7 @@ services:
     image: mysql:8.0
     container_name: mysql
     environment:
+      TZ: Asia/Seoul
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: shopdb
       MYSQL_USER: shopuser
@@ -41,6 +42,7 @@ services:
       - redis
       - mysql
     environment:
+      TZ: Asia/Seoul
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379

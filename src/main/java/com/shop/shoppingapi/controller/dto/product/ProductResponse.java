@@ -19,6 +19,8 @@ public class ProductResponse {
     private String titleImage; // 타이틀 이미지 URL
     private String title; // 제품 타이틀 또는 간단 설명
     private BigDecimal price; // 제품 가격
+    private Double discountRate;
+    private BigDecimal discountedPrice;
 
 
     public static ProductResponse of(Product product) {
@@ -27,7 +29,9 @@ public class ProductResponse {
                 product.getName(),
                 product.getTitleImage(),
                 product.getTitle(),
-                product.getPrice()
+                product.getPrice(),
+                product.getDiscountRate(),
+                product.getDiscountedPrice()
         );
     }
 

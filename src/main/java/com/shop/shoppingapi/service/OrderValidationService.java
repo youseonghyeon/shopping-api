@@ -33,11 +33,6 @@ public class OrderValidationService {
         // 3. 상품별 할인율을 적용하여 총 상품 가격 계산
         this.validateTotalProductPrice(calculatedItemsTotal, request.getTotalProductPrice());
 
-        // 4. 원래 가격 총합과 할인 총액 검증
-        BigDecimal sumOriginalPrices = calculateOriginalSum(request.getItems(), discountedPriceMap);
-        BigDecimal expectedDiscountSum = sumOriginalPrices.subtract(calculatedItemsTotal);
-        this.validateDiscountSum(expectedDiscountSum, request.getDiscountSum());
-
         // 5. 최종 결제 금액 검증: (할인 후 상품총액 - usedPoints) + shippingFee
         BigDecimal shippingFee = request.getShippingFee();
         BigDecimal usedPoints = new BigDecimal(request.getUsedPoints());

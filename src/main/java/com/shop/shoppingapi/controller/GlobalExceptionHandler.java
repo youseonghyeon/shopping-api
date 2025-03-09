@@ -20,6 +20,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<Map<String, String>> handleDuplicateException(DuplicateResourceException ex) {
+        log.error("", ex);
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("field", ex.getField());
         errorResponse.put("message", ex.getMessage());
@@ -28,21 +29,25 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
     public ResponseEntity<? extends ApiResponse<?>> handleAuthenticationCredentialsNotFoundException(AuthenticationCredentialsNotFoundException ex) {
+        log.error("", ex);
         return ApiResponse.error("인증 정보가 없습니다.", HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(ApiResponseException.class)
     public ResponseEntity<? extends ApiResponse<?>> handleApiResponseException(ApiResponseException ex) {
+        log.error("", ex);
         return ApiResponse.error(ex.getMessage(), ex.getHttpStatus());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<? extends ApiResponse<?>>  handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.error("", ex);
         return ApiResponse.error(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<? extends ApiResponse<?>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        log.error("", ex);
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
         return ApiResponse.error("요청 데이터가 올바르지 않습니다.", HttpStatus.BAD_REQUEST, Map.of("errors", errors));
