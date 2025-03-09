@@ -32,7 +32,7 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
                     return super.attemptAuthentication(request, response);
                 }
                 LoginRequest loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
-                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
                 setDetails(request, token);
                 return this.getAuthenticationManager().authenticate(token);
             } catch (IOException e) {
@@ -45,7 +45,7 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
 
     @Getter
     private static class LoginRequest {
-        private String username;
+        private String email;
         private String password;
     }
 }
