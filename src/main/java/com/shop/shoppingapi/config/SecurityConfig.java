@@ -7,6 +7,7 @@ import com.shop.shoppingapi.security.handler.CustomAuthenticationFailureHandler;
 import com.shop.shoppingapi.security.handler.CustomAuthenticationSuccessHandler;
 import com.shop.shoppingapi.security.handler.CustomLogoutSuccessHandler;
 import com.shop.shoppingapi.security.service.JwtTokenProvider;
+import com.shop.shoppingapi.security.utils.RsaUtils;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,9 +44,17 @@ public class SecurityConfig {
     @Value("${cors.allowed-origins}")
     private String allowedOrigins;
 
+    @Value("${security.rsa.private-key-path}")
+    private String rsaPrivateKeyPath;
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-        JsonUsernamePasswordAuthenticationFilter jsonLoginFilter = new JsonUsernamePasswordAuthenticationFilter(authenticationManager);
+    public RsaUtils rsaUtils() {
+        return new RsaUtils(rsaPrivateKeyPath);
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager, RsaUtils rsaUtils) throws Exception {
+        JsonUsernamePasswordAuthenticationFilter jsonLoginFilter = new JsonUsernamePasswordAuthenticationFilter(authenticationManager, rsaUtils);
         jsonLoginFilter.setAuthenticationSuccessHandler(new CustomAuthenticationSuccessHandler(objectMapper, jwtTokenProvider));
         jsonLoginFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler());
 
