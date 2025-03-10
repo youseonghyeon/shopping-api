@@ -21,7 +21,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-
     private final ObjectMapper objectMapper;
     private final JwtTokenProvider jwtTokenProvider;
 

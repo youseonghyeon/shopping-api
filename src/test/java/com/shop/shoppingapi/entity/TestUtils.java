@@ -13,7 +13,7 @@ public class TestUtils {
     }
 
     public static User createUser(Long userId, String username, String password, String email, String phone) {
-        return new User(userId, username, password, email, phone, 0, Role.USER);
+        return new User(userId, username, password, email, phone, 0, Role.ROLE_USER);
     }
 
     public static User login(Long userId, String username, String password, String email, String phone) {

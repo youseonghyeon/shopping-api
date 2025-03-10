@@ -6,6 +6,7 @@ import com.shop.shoppingapi.security.filter.JsonUsernamePasswordAuthenticationFi
 import com.shop.shoppingapi.security.handler.CustomAuthenticationFailureHandler;
 import com.shop.shoppingapi.security.handler.CustomAuthenticationSuccessHandler;
 import com.shop.shoppingapi.security.handler.CustomLogoutSuccessHandler;
+import com.shop.shoppingapi.security.service.CustomUserDetailsService;
 import com.shop.shoppingapi.security.service.JwtTokenProvider;
 import com.shop.shoppingapi.security.utils.RsaUtils;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +27,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,14 +53,15 @@ public class SecurityConfig {
     @Value("${security.rsa.private-key-path}")
     private String rsaPrivateKeyPath;
 
-    @Bean
-    public RsaUtils rsaUtils() {
-        return new RsaUtils(rsaPrivateKeyPath);
-    }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager, RsaUtils rsaUtils) throws Exception {
-        JsonUsernamePasswordAuthenticationFilter jsonLoginFilter = new JsonUsernamePasswordAuthenticationFilter(authenticationManager, rsaUtils);
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            AuthenticationManager authenticationManager,
+            CustomUserDetailsService customUserDetailsService,
+            RememberMeServices rememberMeServices,
+            RsaUtils rsaUtils) throws Exception {
+        JsonUsernamePasswordAuthenticationFilter jsonLoginFilter = new JsonUsernamePasswordAuthenticationFilter(authenticationManager, rememberMeServices, rsaUtils);
         jsonLoginFilter.setAuthenticationSuccessHandler(new CustomAuthenticationSuccessHandler(objectMapper, jwtTokenProvider));
         jsonLoginFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler());
 
@@ -80,8 +87,13 @@ public class SecurityConfig {
         return logout -> logout.logoutUrl("/api/logout")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .deleteCookies("JSESSIONID")
+                .deleteCookies("JSESSIONID", "remember-me")
                 .logoutSuccessHandler(new CustomLogoutSuccessHandler());
+    }
+
+    @Bean
+    public RsaUtils rsaUtils() {
+        return new RsaUtils(rsaPrivateKeyPath);
     }
 
     @Bean
@@ -120,6 +132,21 @@ public class SecurityConfig {
                 Role.ROLE_SELLER + " > " + Role.ROLE_USER.name()
         );
         return RoleHierarchyImpl.fromHierarchy(hierarchy);
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(DataSource dataSource) {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        return tokenRepository;
+    }
+
+    @Bean
+    public RememberMeServices rememberMeServices(CustomUserDetailsService userDetailsService, PersistentTokenRepository tokenRepository) {
+        PersistentTokenBasedRememberMeServices rememberMeServices = new PersistentTokenBasedRememberMeServices("a6e5f8d2c1b4a3d7e9f0b1c2a3d4e5f6", userDetailsService, tokenRepository);
+        rememberMeServices.setTokenValiditySeconds(14 * 24 * 60 * 60);
+        rememberMeServices.setParameter("rememberMe");
+        return rememberMeServices;
     }
 
 }
