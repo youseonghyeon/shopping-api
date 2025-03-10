@@ -1,7 +1,8 @@
 package com.shop.shoppingapi.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shop.shoppingapi.security.service.JwtTokenProvider;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.shop.shoppingapi.controller.dto.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,46 +22,19 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final ObjectMapper objectMapper;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
-        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
 
+        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json;charset=UTF-8");
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("status", "success");
-        data.put("message", "로그인 성공");
-        data.put("user", userDetails.getUsername());
-
-        response.getWriter().write(objectMapper.writeValueAsString(data));
+        ApiResponse<String> body = ApiResponse.success("로그인에 성공하였습니다.", "로그인에 성공하였습니다.").getBody();
+        response.getWriter().write(objectMapper.writeValueAsString(body));
     }
-
-//    @Override
-//    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-//        String token = jwtTokenProvider.generateToken(authentication);
-//
-//        response.setStatus(HttpServletResponse.SC_OK);
-//        response.setContentType("application/json;charset=UTF-8");
-//
-//        // 로그인한 사용자 정보 가져오기
-//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("status", "success");
-//        data.put("message", "로그인 성공");
-//        data.put("user", userDetails.getUsername());
-//        data.put("token", token);
-//
-//        response.getWriter().write(objectMapper.writeValueAsString(data));
-//    }
-
 }
