@@ -18,11 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -90,14 +89,13 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보가 없습니다."));
     }
 
+    @Transactional(readOnly = true)
     public Page<Order> findOrdersWithOrdersItemsAndProductsByUserId(long userId, Pageable pageable) {
         Page<Order> findPagedOrders = orderRepository.findAllByBuyerId(userId, pageable);
         List<Long> orderIds = findPagedOrders.map(Order::getId).toList();
         if (!orderIds.isEmpty()) {
-            // lazy fetching (batch size: 50)
-            List<OrderItem> orderItems = orderItemRepository.findAllWithProductByIds(orderIds);
+            findPagedOrders.getContent().forEach(order -> order.getOrderItems().forEach(orderItem -> orderItem.getProduct().getReview().size()));
         }
         return findPagedOrders;
     }
-
 }

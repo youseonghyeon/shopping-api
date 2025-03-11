@@ -20,14 +20,16 @@ public class OrderItemResponse {
     private BigDecimal totalPrice;
 
     public static OrderItemResponse from(OrderItem orderItem, boolean includeProduct) {
-        return OrderItemResponse.builder()
+        OrderItemResponseBuilder builder = OrderItemResponse.builder()
                 .id(orderItem.getId())
-                .productResponse(ProductResponse.of(orderItem.getProduct()))
                 .quantity(orderItem.getQuantity())
                 .unitPrice(orderItem.getUnitPrice())
                 .discountRate(orderItem.getDiscountRate())
                 .discountedPrice(orderItem.getDiscountedPrice())
-                .totalPrice(orderItem.getTotalPrice())
-                .build();
+                .totalPrice(orderItem.getTotalPrice());
+        if (includeProduct) {
+            builder.productResponse(ProductResponse.of(orderItem.getProduct()));
+        }
+        return builder.build();
     }
 }

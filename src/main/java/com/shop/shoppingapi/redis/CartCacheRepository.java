@@ -41,6 +41,11 @@ public class CartCacheRepository {
                 .toList();
     }
 
+    public int getCartSize(Long userId) {
+        String key = getCartKey(userId);
+        return redisTemplate.opsForHash().size(key).intValue();
+    }
+
     // 특정 상품 삭제: productId 필드를 삭제하면 됨
     public void deleteCartItem(Long userId, Long productId) {
         String key = getCartKey(userId);

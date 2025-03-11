@@ -49,4 +49,7 @@ public class CartService {
                 .toList();
     }
 
+    public int findCartsSize(Long userId) {
+        return cartCacheRepository.getCartSize(userId);
+    }
 }

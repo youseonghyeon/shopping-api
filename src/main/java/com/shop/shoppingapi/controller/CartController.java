@@ -27,7 +27,14 @@ public class CartController {
     public ResponseEntity<ApiResponse<List<CartResponse>>> list() {
         Long userId = SecurityUtils.getUserId();
         List<CartResponse> cartResponses = cartService.findCarts(userId);
-        return ApiResponse.success(cartResponses);
+        return ApiResponse.success(cartResponses, "장바구니 목록을 조회하였습니다.");
+    }
+
+    @GetMapping("/cart/count")
+    public ResponseEntity<ApiResponse<Integer>> count() {
+        Long userId = SecurityUtils.getUserId();
+        int count = cartService.findCartsSize(userId);
+        return ApiResponse.success(count, "장바구니 상품 개수를 조회하였습니다.");
     }
 
     @PostMapping("/cart/create")
