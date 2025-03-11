@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
     public ResponseEntity<? extends ApiResponse<?>> handleAuthenticationCredentialsNotFoundException(AuthenticationCredentialsNotFoundException ex) {
-        log.error("", ex);
+        log.warn("Call without authentication credentials");
         return ApiResponse.error("인증 정보가 없습니다.", HttpStatus.UNAUTHORIZED);
     }
 

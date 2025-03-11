@@ -26,7 +26,7 @@ public class OrderItemConverter {
         // 3. OrderItem 엔티티 생성
         return OrderItem.builder()
                 .order(baseOrder)
-                .productId(orderItemRequest.getProductId())
+                .product(product)
                 .quantity(orderItemRequest.getQuantity())
                 .unitPrice(product.getPrice())
                 .discountRate(product.getDiscountRate())

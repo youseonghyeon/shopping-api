@@ -14,24 +14,26 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SecurityUtils {
 
+    private static final String AUTH_CREDENTIALS_NOT_FOUND = "No authentication credentials found.";
+
     public static Long getUserId() {
         return Optional.ofNullable(getCurrentUser())
                 .map(CustomUserDetails::user)
                 .map(User::getId)
-                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException("No authentication credentials found."));
+                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException(AUTH_CREDENTIALS_NOT_FOUND));
     }
 
     private static CustomUserDetails getCurrentUser() {
-        return (CustomUserDetails) Optional.ofNullable(getCurrentAuthentication())
+        return Optional.ofNullable(getCurrentAuthentication())
                 .map(Authentication::getPrincipal)
-                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException("No authentication credentials found."));
+                .filter(CustomUserDetails.class::isInstance)
+                .map(CustomUserDetails.class::cast)
+                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException(AUTH_CREDENTIALS_NOT_FOUND));
     }
 
-    public static Authentication getCurrentAuthentication() {
+    private static Authentication getCurrentAuthentication() {
         return Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
-                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException("No authentication credentials found."));
+                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException(AUTH_CREDENTIALS_NOT_FOUND));
     }
-
-
 }

@@ -6,10 +6,10 @@ import jakarta.servlet.http.HttpServletRequestWrapper;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomHttpServletRequestWrapper extends HttpServletRequestWrapper {
+public class HttpRequestWrapper extends HttpServletRequestWrapper {
     private final Map<String, String[]> customParams = new HashMap<>();
 
-    public CustomHttpServletRequestWrapper(HttpServletRequest request) {
+    public HttpRequestWrapper(HttpServletRequest request) {
         super(request);
     }
 

@@ -23,8 +23,9 @@ public class Order {
     @Column(name = "order_number", nullable = false, unique = true, length = 20)
     private String orderNumber; // 고유 주문 번호
 
-    @Column(name = "customer_id", nullable = false)
-    private Long customerId; // 주문한 고객의 ID
+    @JoinColumn(name = "buyer_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User buyer; // 주문한 고객의 ID
 
     @Column(name = "recipient_name", nullable = false, length = 100)
     private String recipientName; // 수령인 이름

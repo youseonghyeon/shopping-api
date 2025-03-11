@@ -3,10 +3,12 @@ package com.shop.shoppingapi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Getter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
@@ -30,6 +32,10 @@ public class User {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column
+    @OneToMany(mappedBy = "user")
+    private List<Wishlist> wishlists = new ArrayList<>();
 
     public User(String username, String password, String email, String phone, Role role) {
         this.username = username;

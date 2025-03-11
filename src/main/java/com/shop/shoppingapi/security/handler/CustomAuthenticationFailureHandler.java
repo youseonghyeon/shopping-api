@@ -15,8 +15,6 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 import java.io.IOException;
 
-import static org.ietf.jgss.GSSException.UNAUTHORIZED;
-
 @Slf4j
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 

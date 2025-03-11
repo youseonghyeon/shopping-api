@@ -87,21 +87,6 @@ public class OrderValidationService {
         }
     }
 
-    private BigDecimal calculateOriginalSum(List<SubmitOrderRequest.OrderItemRequest> items, Map<Long, BigDecimal> productPriceMap) {
-        BigDecimal sum = BigDecimal.ZERO;
-        for (SubmitOrderRequest.OrderItemRequest item : items) {
-            BigDecimal originalPrice = productPriceMap.get(item.getProductId());
-            sum = sum.add(originalPrice.multiply(new BigDecimal(item.getQuantity())));
-        }
-        return sum;
-    }
-
-    private void validateDiscountSum(BigDecimal expectedDiscountSum, BigDecimal requestDiscountSum) {
-        if (expectedDiscountSum.compareTo(requestDiscountSum) != 0) {
-            throw new IllegalArgumentException("총 할인 금액이 올바르지 않습니다.");
-        }
-    }
-
     private void validateFinalPayment(BigDecimal expectedFinalPayment, BigDecimal requestFinalPayment) {
         if (expectedFinalPayment.compareTo(requestFinalPayment) != 0) {
             throw new IllegalArgumentException("최종 결제 금액이 올바르지 않습니다.");

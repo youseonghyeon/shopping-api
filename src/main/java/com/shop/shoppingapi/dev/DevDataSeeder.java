@@ -11,7 +11,6 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +20,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.LongStream;
 
 @Slf4j
-@Profile("none")
 @Configuration
 @RequiredArgsConstructor
 public class DevDataSeeder {
@@ -36,7 +34,7 @@ public class DevDataSeeder {
         CompletableFuture.runAsync(() -> {
             log.info("Starting data seeder initialization");
             insertProducts(100);
-            insertUsers(100);
+            insertUsers();
             log.info("Data seeder initialization finished");
         });
     }
@@ -57,14 +55,9 @@ public class DevDataSeeder {
 
     private Long[] productPrices = {2000_000L, 2_500_000L, 1_500_000L, 1_200_000L, 50_000L, 30_000L};
 
-    private void insertUsers(int mockUserSize) {
-        String usernamePrefix = "user";
-        String passwordPrefix = "user";
-        Role role = Role.ROLE_USER;
-        List<User> list = LongStream.range(0, mockUserSize)
-                .mapToObj(i -> UserConverter.toEntity(usernamePrefix + i, passwordEncoder.encode(passwordPrefix + i), role))
-                .toList();
-        userRepository.saveAll(list);
+    private void insertUsers() {
+        User user = new User("테스트계정", passwordEncoder.encode("3jr5b1j3jbl_!"), "testUser@mail.com", "01088889999", Role.ROLE_USER);
+        userRepository.save(user);
     }
 
     private void insertProducts(int mockProductSize) {

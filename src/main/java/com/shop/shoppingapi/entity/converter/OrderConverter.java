@@ -2,6 +2,7 @@ package com.shop.shoppingapi.entity.converter;
 
 import com.shop.shoppingapi.controller.dto.SubmitOrderRequest;
 import com.shop.shoppingapi.entity.Order;
+import com.shop.shoppingapi.entity.User;
 import lombok.NonNull;
 import org.springframework.util.StringUtils;
 
@@ -11,17 +12,17 @@ import java.util.Objects;
 
 public class OrderConverter {
 
-    public static Order toEntity(@NonNull SubmitOrderRequest request, @NonNull String orderNumber, @NonNull Long userId) {
+    public static Order toEntity(@NonNull SubmitOrderRequest request, @NonNull String orderNumber, @NonNull User user) {
 
         // 1. Null 검증 (필수 필드)
         validateRequest(request);
         validateField("orderNumber", orderNumber);
-        validateField("userId", userId);
+        validateField("userId", user.getId());
 
         // 2. 주문 헤더(Order) 엔티티 생성
         return Order.builder()
                 .orderNumber(orderNumber)
-                .customerId(userId)
+                .buyer(user)
                 .recipientName(request.getShippingInfo().getRecipientName())
                 .address(request.getShippingInfo().getAddress())
                 .phone(request.getShippingInfo().getPhone())

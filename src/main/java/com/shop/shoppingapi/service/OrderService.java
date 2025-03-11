@@ -8,10 +8,13 @@ import com.shop.shoppingapi.entity.User;
 import com.shop.shoppingapi.entity.converter.OrderConverter;
 import com.shop.shoppingapi.entity.converter.OrderItemConverter;
 import com.shop.shoppingapi.redis.CartCacheRepository;
+import com.shop.shoppingapi.repository.OrderItemRepository;
 import com.shop.shoppingapi.repository.OrderRepository;
 import com.shop.shoppingapi.repository.ProductRepository;
 import com.shop.shoppingapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,8 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final CartCacheRepository cartCacheRepository;
@@ -43,7 +48,7 @@ public class OrderService {
         orderValidationService.validateUserPoint(user, request.getUsedPoints());
 
         // 3. order 엔티티 및 orderItem 엔티티 생성
-        Order order = createOrderAndOrderItems(userId, request);
+        Order order = createOrderAndOrderItems(user, request);
         Long savedOrderId = orderRepository.save(order).getId();
 
         // 11. 사용자 포인트 차감
@@ -56,10 +61,10 @@ public class OrderService {
         return savedOrderId;
     }
 
-    private Order createOrderAndOrderItems(Long userId, SubmitOrderRequest request) {
+    private Order createOrderAndOrderItems(User user, SubmitOrderRequest request) {
         // 1. order 엔티티 생성
         String orderNumber = generateOrderNumber();
-        Order order = OrderConverter.toEntity(request, orderNumber, userId);
+        Order order = OrderConverter.toEntity(request, orderNumber, user);
         order.clearOrderItems();
 
         // 2. orderItems 엔티티 생성
@@ -84,4 +89,15 @@ public class OrderService {
         return findOrderOptional
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보가 없습니다."));
     }
+
+    public Page<Order> findOrdersWithOrdersItemsAndProductsByUserId(long userId, Pageable pageable) {
+        Page<Order> findPagedOrders = orderRepository.findAllByBuyerId(userId, pageable);
+        List<Long> orderIds = findPagedOrders.map(Order::getId).toList();
+        if (!orderIds.isEmpty()) {
+            // lazy fetching (batch size: 50)
+            List<OrderItem> orderItems = orderItemRepository.findAllWithProductByIds(orderIds);
+        }
+        return findPagedOrders;
+    }
+
 }

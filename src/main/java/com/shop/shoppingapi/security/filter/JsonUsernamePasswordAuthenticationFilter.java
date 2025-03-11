@@ -1,7 +1,7 @@
 package com.shop.shoppingapi.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shop.shoppingapi.security.utils.CustomHttpServletRequestWrapper;
+import com.shop.shoppingapi.security.utils.HttpRequestWrapper;
 import com.shop.shoppingapi.security.utils.RsaUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -50,15 +50,22 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
 
                 if (loginRequest.isRememberMe()) {
                     // rememberMeService 가 JSON을 처리할줄 몰라서 requestWrapper 를 만들어서 처리함
-                    CustomHttpServletRequestWrapper wrappedRequest = new CustomHttpServletRequestWrapper(request);
+                    HttpRequestWrapper wrappedRequest = new HttpRequestWrapper(request);
                     wrappedRequest.addParameter("rememberMe", "true");
                     rememberMeServices.loginSuccess(wrappedRequest, response, authenticate);
                 }
                 return authenticate;
+            } catch (RuntimeException e) {
+                log.warn("Authentication failed: {}", e.getMessage());
+                throw e;
             } catch (IOException e) {
-                throw new AuthenticationServiceException("JSON 파싱 실패", e);
+                // JSON 파싱 오류
+                log.error("", e);
+                throw new AuthenticationServiceException("유효하지 않은 요청입니다.", e);
             } catch (Exception e) {
-                throw new AuthenticationServiceException("인증 과정 중 오류 발생", e);
+                // 이외 처리 오류
+                log.error("", e);
+                throw new AuthenticationServiceException("유효하지 않는 요청입니다.", e);
             }
         } else {
             return super.attemptAuthentication(request, response);
