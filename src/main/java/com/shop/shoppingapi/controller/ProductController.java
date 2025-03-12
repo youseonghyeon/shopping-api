@@ -40,7 +40,7 @@ public class ProductController {
 
     @GetMapping("/products/{id}")
     public ResponseEntity<ApiResponse<ProductResponse>> getProduct(@PathVariable Long id) {
-        Optional<Product> product = productService.findProduct(id);
+        Optional<Product> product = productService.findProductById(id);
         if (product.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

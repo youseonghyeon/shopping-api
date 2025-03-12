@@ -36,7 +36,7 @@ public class ProductService {
         return productRepository.existsById(id);
     }
 
-    public Optional<Product> findProduct(Long id) {
+    public Optional<Product> findProductById(Long id) {
         return productRepository.findById(id);
     }
 
@@ -53,7 +53,7 @@ public class ProductService {
     }
 
     public void updateProduct(Long productId, Product productForUpdate) {
-        findProduct(productId).ifPresent(product -> {
+        findProductById(productId).ifPresent(product -> {
             // TODO: Implement update logic
             throw new UnsupportedOperationException("Not implemented yet");
         });
@@ -87,10 +87,6 @@ public class ProductService {
         List<SimpleProduct> list = products.stream().map(ProductConverter::toSimpleProductFromEntity).toList();
         list.forEach(simpleProductCacheRepository::save);
         return list.stream().collect(Collectors.toMap(SimpleProduct::getProductId, pp -> pp));
-    }
-
-    public Optional<Product> findProductById(Long productId) {
-        return productRepository.findById(productId);
     }
 
     public boolean existsProductById(Long productId) {

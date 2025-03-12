@@ -26,7 +26,7 @@ public class MyPageController {
             return ApiResponse.error("인증 정보가 없습니다.", HttpStatus.UNAUTHORIZED);
         }
         Long userId = SecurityUtils.getUserId();
-        User user = userService.findById(userId);
+        User user = userService.findById(userId).orElseThrow(() -> new IllegalArgumentException("User Not Found"));
         MyRoomResponse myRoomResponse = new MyRoomResponse(user.getUsername(), user.getRole().name(), true, user.getPoint());
         return ApiResponse.success(myRoomResponse);
 

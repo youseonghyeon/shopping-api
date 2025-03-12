@@ -34,7 +34,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void testFindProducts() {
+    void testFindProductsById() {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Product> productPage = new PageImpl<>(Collections.emptyList());
         when(productRepository.findAll(pageable)).thenReturn(productPage);
@@ -57,12 +57,12 @@ class ProductServiceTest {
     }
 
     @Test
-    void testFindProduct() {
+    void testFindProductById() {
         Long productId = 1L;
         Product product = ProductConverterForTest.toEntity(productId, "Test Product", "http://example.com/image.jpg", "Test Title", BigDecimal.valueOf(99.99), "Test Description", "Test Category", 100);
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
-        Optional<Product> result = productService.findProduct(productId);
+        Optional<Product> result = productService.findProductById(productId);
 
         assertTrue(result.isPresent());
         assertEquals(product, result.get());

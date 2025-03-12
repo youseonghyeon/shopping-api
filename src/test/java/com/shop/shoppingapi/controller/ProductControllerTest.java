@@ -3,7 +3,6 @@ package com.shop.shoppingapi.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shop.shoppingapi.controller.dto.CustomPagedModelAssembler;
 import com.shop.shoppingapi.controller.dto.product.CreateProductRequest;
-import com.shop.shoppingapi.controller.dto.product.DeleteProductRequest;
 import com.shop.shoppingapi.controller.dto.product.ProductResponse;
 import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.entity.TestUtils;
@@ -97,7 +96,7 @@ class ProductControllerTest {
     void getProduct_success() throws Exception {
         Long productId = 1L;
         Product product = TestUtils.createProduct(productId, "상품1", "image1", "title1", new BigDecimal("1000"));
-        when(productService.findProduct(productId)).thenReturn(Optional.of(product));
+        when(productService.findProductById(productId)).thenReturn(Optional.of(product));
 
         mockMvc.perform(get("/api/products/{id}", productId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -110,7 +109,7 @@ class ProductControllerTest {
     @Test
     void getProduct_notFound() throws Exception {
         Long productId = 1L;
-        when(productService.findProduct(productId)).thenReturn(Optional.empty());
+        when(productService.findProductById(productId)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/products/{id}", productId)
                         .contentType(MediaType.APPLICATION_JSON))

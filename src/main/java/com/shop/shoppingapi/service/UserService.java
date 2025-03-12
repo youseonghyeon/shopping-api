@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -45,8 +45,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User findById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(UserNotFoundException::new);
+    public Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
     }
 }
