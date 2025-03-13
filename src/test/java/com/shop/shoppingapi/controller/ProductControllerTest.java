@@ -72,7 +72,7 @@ class ProductControllerTest {
         when(productService.findProducts(any(Pageable.class))).thenReturn(productPage);
 
         // Response Page<ProductResponse> 생성
-        Page<ProductResponse> responsePage = productPage.map(ProductResponse::of);
+        Page<ProductResponse> responsePage = productPage.map(ProductResponse::from);
         PagedModel<ProductResponse> pagedModel = PagedModel.of(
                 responsePage.getContent(),
                 new PagedModel.PageMetadata(responsePage.getSize(), responsePage.getNumber(), responsePage.getTotalElements())

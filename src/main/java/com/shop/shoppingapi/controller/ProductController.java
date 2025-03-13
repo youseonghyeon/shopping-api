@@ -34,7 +34,7 @@ public class ProductController {
     @GetMapping("/products")
     public ResponseEntity<ApiResponse<PagedModel<ProductResponse>>> getProducts(@PageableDefault(size = 10) Pageable pageable) {
         Page<Product> products = productService.findProducts(pageable);
-        Page<ProductResponse> productsResponse = products.map(ProductResponse::of);
+        Page<ProductResponse> productsResponse = products.map(ProductResponse::from);
         return ApiResponse.success(pagedModelAssembler.toModel(productsResponse));
     }
 
@@ -44,7 +44,7 @@ public class ProductController {
         if (product.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        ProductResponse productResponse = ProductResponse.of(product.get());
+        ProductResponse productResponse = ProductResponse.from(product.get());
         return ApiResponse.success(productResponse);
     }
 
@@ -54,7 +54,7 @@ public class ProductController {
         if (findProducts.isEmpty()) {
             return ApiResponse.error("상품을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
         }
-        List<ProductResponse> list = findProducts.stream().map(ProductResponse::of).toList();
+        List<ProductResponse> list = findProducts.stream().map(ProductResponse::from).toList();
         return ApiResponse.success(list);
     }
 

@@ -28,7 +28,7 @@ public class OrderItemResponse {
                 .discountedPrice(orderItem.getDiscountedPrice())
                 .totalPrice(orderItem.getTotalPrice());
         if (includeProduct) {
-            builder.productResponse(ProductResponse.of(orderItem.getProduct()));
+            builder.productResponse(ProductResponse.from(orderItem.getProduct()));
         }
         return builder.build();
     }

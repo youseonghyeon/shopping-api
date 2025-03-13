@@ -28,7 +28,7 @@ public class WishlistController {
     public ResponseEntity<ApiResponse<WishlistResponse>> getWishlists() {
         Long userId = SecurityUtils.getUserId();
         List<Wishlist> wishlists = wishlistService.findWithProductByUserId(userId);
-        List<ProductResponse> list = wishlists.stream().map(Wishlist::getProduct).map(ProductResponse::of).toList();
+        List<ProductResponse> list = wishlists.stream().map(Wishlist::getProduct).map(ProductResponse::from).toList();
         WishlistResponse wishlistResponse = new WishlistResponse(list);
         return ApiResponse.success(wishlistResponse, "위시리스트 목록을 조회하였습니다.");
     }

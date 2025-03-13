@@ -1,14 +1,20 @@
 package com.shop.shoppingapi.controller.dto.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.shop.shoppingapi.controller.dto.ReviewResponse;
 import com.shop.shoppingapi.entity.Product;
+import com.shop.shoppingapi.entity.Review;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
+@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProductResponse {
 
@@ -22,17 +28,36 @@ public class ProductResponse {
     private Double discountRate;
     private BigDecimal discountedPrice;
 
+    @Builder.Default
+    private List<ReviewResponse> reviews = new ArrayList<>();
 
-    public static ProductResponse of(Product product) {
-        return new ProductResponse(
-                product.getId(),
-                product.getName(),
-                product.getTitleImage(),
-                product.getTitle(),
-                product.getPrice(),
-                product.getDiscountRate(),
-                product.getDiscountedPrice()
-        );
+
+    public static ProductResponse from(Product product) {
+        return ProductResponse.builder()
+                .productId(product.getId())
+                .productName(product.getName())
+                .titleImage(product.getTitleImage())
+                .title(product.getTitle())
+                .price(product.getPrice())
+                .discountRate(product.getDiscountRate())
+                .discountedPrice(product.getDiscountedPrice()).build();
+    }
+
+    public static ProductResponse from(Product product, boolean includeReview) {
+        ProductResponseBuilder productResponseBuilder = ProductResponse.builder()
+                .productId(product.getId())
+                .productName(product.getName())
+                .titleImage(product.getTitleImage())
+                .title(product.getTitle())
+                .price(product.getPrice())
+                .discountRate(product.getDiscountRate())
+                .discountedPrice(product.getDiscountedPrice());
+        if (includeReview) {
+            List<Review> reviews = product.getReviews();
+            List<ReviewResponse> reviewResponses = reviews.stream().map(ReviewResponse::from).toList();
+            productResponseBuilder.reviews(reviewResponses);
+        }
+        return productResponseBuilder.build();
     }
 
 

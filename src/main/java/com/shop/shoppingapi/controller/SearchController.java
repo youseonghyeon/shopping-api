@@ -29,7 +29,7 @@ public class SearchController {
     @GetMapping("/search/products")
     public ResponseEntity<ApiResponse<PagedModel<ProductResponse>>> searchProducts(@PageableDefault(size = 10) Pageable pageable, @RequestParam("q") String query) {
         Page<Product> products = productService.findProducts(pageable, query);
-        Page<ProductResponse> productsResponse = products.map(ProductResponse::of);
+        Page<ProductResponse> productsResponse = products.map(ProductResponse::from);
         return ApiResponse.success(pagedModelAssembler.toModel(productsResponse));
     }
 }

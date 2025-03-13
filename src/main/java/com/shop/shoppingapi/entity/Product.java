@@ -39,7 +39,7 @@ public class Product extends BaseEntity {
     private Double discountRate = 0.0;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    private List<Review> review = new ArrayList<>();
+    private List<Review> reviews = new ArrayList<>();
 
     public BigDecimal getDiscountedPrice() {
         return price.multiply(BigDecimal.valueOf(1 - discountRate));
