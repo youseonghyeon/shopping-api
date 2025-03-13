@@ -32,7 +32,7 @@ public class OrderController {
     @GetMapping("/order")
     public ResponseEntity<ApiResponse<PagedModel<OrderResponse>>> getMyOrders(@PageableDefault(size = 10) Pageable pageable) {
         Long userId = SecurityUtils.getUserId();
-        Page<Order> orders = orderService.findOrdersWithOrdersItemsAndProductsByUserId(userId, pageable);
+        Page<Order> orders = orderService.findOrdersWithOrdersItemsAndProductByUserId(userId, pageable);
         Page<OrderResponse> orderResponses = orders.map(order -> OrderResponse.from(order, true, true));
         return ApiResponse.success(pagedModelAssembler.toModel(orderResponses), "주문 목록을 조회하였습니다.");
     }

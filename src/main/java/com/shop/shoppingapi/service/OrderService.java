@@ -88,7 +88,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Order> findOrdersWithOrdersItemsAndProductsByUserId(long userId, Pageable pageable) {
+    public Page<Order> findOrdersWithOrdersItemsAndProductByUserId(long userId, Pageable pageable) {
         Page<Order> findPagedOrders = orderRepository.findAllByBuyerId(userId, pageable);
         if (!findPagedOrders.isEmpty()) {
             findPagedOrders.getContent().forEach(order -> order.getOrderItems().forEach(orderItem -> orderItem.getProduct().toString()));
