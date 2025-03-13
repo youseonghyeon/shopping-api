@@ -1,4 +1,4 @@
-package com.shop.shoppingapi.controller.dto;
+package com.shop.shoppingapi.controller.dto.wishlist;
 
 import lombok.Data;
 

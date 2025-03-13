@@ -1,4 +1,4 @@
-package com.shop.shoppingapi.controller.dto;
+package com.shop.shoppingapi.controller.dto.order;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;

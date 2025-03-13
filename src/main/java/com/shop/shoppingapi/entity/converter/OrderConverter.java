@@ -1,6 +1,6 @@
 package com.shop.shoppingapi.entity.converter;
 
-import com.shop.shoppingapi.controller.dto.SubmitOrderRequest;
+import com.shop.shoppingapi.controller.dto.order.SubmitOrderRequest;
 import com.shop.shoppingapi.entity.Order;
 import com.shop.shoppingapi.entity.User;
 import lombok.NonNull;

@@ -1,6 +1,6 @@
 package com.shop.shoppingapi.service;
 
-import com.shop.shoppingapi.controller.dto.SubmitOrderRequest;
+import com.shop.shoppingapi.controller.dto.order.SubmitOrderRequest;
 import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.entity.User;
 import com.shop.shoppingapi.repository.ProductRepository;
