@@ -92,7 +92,9 @@ public class OrderService {
         Page<Order> findPagedOrders = orderRepository.findAllByBuyerId(userId, pageable);
         List<Long> orderIds = findPagedOrders.map(Order::getId).toList();
         if (!orderIds.isEmpty()) {
-            findPagedOrders.getContent().forEach(order -> order.getOrderItems().forEach(orderItem -> orderItem.getProduct().getReview().size()));
+            findPagedOrders.getContent()
+                    .forEach(order -> order.getOrderItems()
+                            .forEach(orderItem -> orderItem.getProduct().getId()));
         }
         return findPagedOrders;
     }
