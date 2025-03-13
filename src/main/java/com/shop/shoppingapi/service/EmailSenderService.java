@@ -16,12 +16,10 @@ import java.util.concurrent.Executors;
 @RequiredArgsConstructor
 public class EmailSenderService {
 
+    private final JavaMailSender mailSender;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(5);
     @Value("${spring.mail.username}")
     private String fromEmail;
-
-    private final JavaMailSender mailSender;
-
-    private final ExecutorService executorService = Executors.newFixedThreadPool(5);
 
     public void sendWelcomeEmail(String toEmail, String username) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();

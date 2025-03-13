@@ -1,7 +1,7 @@
 package com.shop.shoppingapi.config;
 
-import com.shop.shoppingapi.entity.User;
 import com.shop.shoppingapi.entity.AuditorAwareImpl;
+import com.shop.shoppingapi.entity.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;

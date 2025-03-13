@@ -4,8 +4,6 @@ import com.shop.shoppingapi.entity.Review;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Builder
 public class ReviewResponse {
@@ -15,10 +13,10 @@ public class ReviewResponse {
     private Long userId;
 
     public static ReviewResponse from(Review reviews) {
-       return ReviewResponse.builder()
-               .content(reviews.getContent())
-               .rating(reviews.getRating())
-               .userId(reviews.getUserId())
-               .build();
+        return ReviewResponse.builder()
+                .content(reviews.getContent())
+                .rating(reviews.getRating())
+                .userId(reviews.getUserId())
+                .build();
     }
 }

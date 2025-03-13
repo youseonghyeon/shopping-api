@@ -12,8 +12,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CartCacheRepository {
 
-    private final RedisTemplate<String, Object> redisTemplate;
     private static final String CART_HASH_KEY_PREFIX = "CART_LIST:";
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private String getCartKey(Long userId) {
         return CART_HASH_KEY_PREFIX + userId;

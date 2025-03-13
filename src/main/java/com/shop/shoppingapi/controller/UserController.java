@@ -24,7 +24,7 @@ public class UserController {
 
 
     @GetMapping("/me")
-    public ResponseEntity< ApiResponse<SimpleUserResponse>> me() {
+    public ResponseEntity<ApiResponse<SimpleUserResponse>> me() {
         Long userId = SecurityUtils.getUserId();
         User findUser = userService.findById(userId).orElseThrow(() -> new IllegalArgumentException("User Not Found"));
         return ApiResponse.success(SimpleUserResponse.from(findUser), "사용자 정보를 조회하였습니다.");

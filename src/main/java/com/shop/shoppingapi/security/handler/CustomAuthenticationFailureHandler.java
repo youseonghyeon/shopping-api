@@ -20,18 +20,6 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-    @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
-        log.warn("Authentication failed: {}", exception.getMessage());
-        String failureReason = findFailureReason(exception);
-
-        ApiResponse<Void> body = ApiResponse.error(failureReason, HttpStatus.UNAUTHORIZED).getBody();
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType("application/json");
-        response.setCharacterEncoding("utf-8");
-        response.getWriter().write(objectMapper.writeValueAsString(body));
-    }
-
     private static String findFailureReason(AuthenticationException exception) {
         String failureReason;
         if (exception instanceof BadCredentialsException) {
@@ -44,5 +32,17 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
             failureReason = exception.getMessage();
         }
         return failureReason;
+    }
+
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
+        log.warn("Authentication failed: {}", exception.getMessage());
+        String failureReason = findFailureReason(exception);
+
+        ApiResponse<Void> body = ApiResponse.error(failureReason, HttpStatus.UNAUTHORIZED).getBody();
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
+        response.getWriter().write(objectMapper.writeValueAsString(body));
     }
 }

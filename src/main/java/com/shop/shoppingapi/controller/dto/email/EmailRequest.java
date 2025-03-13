@@ -6,5 +6,5 @@ import lombok.Getter;
 public class EmailRequest {
     private String email;
     private String username;
-    
+
 }

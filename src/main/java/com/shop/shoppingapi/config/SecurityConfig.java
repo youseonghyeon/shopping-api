@@ -53,6 +53,16 @@ public class SecurityConfig {
     @Value("${security.rsa.private-key-path}")
     private String rsaPrivateKeyPath;
 
+    @NotNull
+    private static Customizer<LogoutConfigurer<HttpSecurity>> logoutStep() {
+        log.trace("Configuring logoutStep for SecurityFilterChain");
+        return logout -> logout.logoutUrl("/api/logout")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID", "remember-me")
+                .logoutSuccessHandler(new CustomLogoutSuccessHandler());
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    AuthenticationManager authenticationManager,
@@ -80,16 +90,6 @@ public class SecurityConfig {
                 .build();
         log.trace("SecurityFilterChain bean initialized successfully");
         return filterChain;
-    }
-
-    @NotNull
-    private static Customizer<LogoutConfigurer<HttpSecurity>> logoutStep() {
-        log.trace("Configuring logoutStep for SecurityFilterChain");
-        return logout -> logout.logoutUrl("/api/logout")
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .deleteCookies("JSESSIONID", "remember-me")
-                .logoutSuccessHandler(new CustomLogoutSuccessHandler());
     }
 
     @Bean("rsaUtils")

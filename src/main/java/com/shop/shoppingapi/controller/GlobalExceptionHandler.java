@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<? extends ApiResponse<?>>  handleIllegalArgumentException(IllegalArgumentException ex) {
+    public ResponseEntity<? extends ApiResponse<?>> handleIllegalArgumentException(IllegalArgumentException ex) {
         log.error("", ex);
         return ApiResponse.error(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }

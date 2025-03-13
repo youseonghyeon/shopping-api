@@ -2,8 +2,8 @@ package com.shop.shoppingapi.controller;
 
 import com.shop.shoppingapi.controller.dto.ApiResponse;
 import com.shop.shoppingapi.controller.dto.CustomPagedModelAssembler;
-import com.shop.shoppingapi.controller.dto.order.SubmitOrderRequest;
 import com.shop.shoppingapi.controller.dto.order.OrderResponse;
+import com.shop.shoppingapi.controller.dto.order.SubmitOrderRequest;
 import com.shop.shoppingapi.entity.Order;
 import com.shop.shoppingapi.security.utils.SecurityUtils;
 import com.shop.shoppingapi.service.OrderService;

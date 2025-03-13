@@ -15,11 +15,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WishlistService {
 
+    final int MAX_WISHLIST_SIZE = 20;
     private final WishlistRepository wishlistRepository;
     private final ProductService productService;
     private final UserService userService;
-
-    final int MAX_WISHLIST_SIZE = 20;
 
     @Transactional(readOnly = true)
     public List<Wishlist> findByUserId(Long userId) {

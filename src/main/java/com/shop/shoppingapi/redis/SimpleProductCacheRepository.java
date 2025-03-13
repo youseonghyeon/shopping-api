@@ -14,8 +14,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SimpleProductCacheRepository {
 
-    private final RedisTemplate<String, SimpleProduct> redisTemplate;
     private static final String PRODUCT_PRICE_PREFIX = "PRODUCT_PRICE:";
+    private final RedisTemplate<String, SimpleProduct> redisTemplate;
 
     private ValueOperations<String, SimpleProduct> getValueOps() {
         return redisTemplate.opsForValue();

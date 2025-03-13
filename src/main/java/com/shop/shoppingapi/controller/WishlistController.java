@@ -1,10 +1,10 @@
 package com.shop.shoppingapi.controller;
 
 import com.shop.shoppingapi.controller.dto.ApiResponse;
+import com.shop.shoppingapi.controller.dto.product.ProductResponse;
 import com.shop.shoppingapi.controller.dto.wishlist.CreateWishlistRequest;
 import com.shop.shoppingapi.controller.dto.wishlist.DeleteWishlistRequest;
 import com.shop.shoppingapi.controller.dto.wishlist.WishlistResponse;
-import com.shop.shoppingapi.controller.dto.product.ProductResponse;
 import com.shop.shoppingapi.entity.Wishlist;
 import com.shop.shoppingapi.security.utils.SecurityUtils;
 import com.shop.shoppingapi.service.WishlistService;
