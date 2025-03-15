@@ -12,11 +12,11 @@ public class ReviewResponse {
     private Integer rating;
     private Long userId;
 
-    public static ReviewResponse from(Review reviews) {
+    public static ReviewResponse from(Review review) {
         return ReviewResponse.builder()
-                .content(reviews.getContent())
-                .rating(reviews.getRating())
-                .userId(reviews.getUserId())
+                .content(review.getContent())
+                .rating(review.getRating())
+                .userId(review.getUser().getId())
                 .build();
     }
 }

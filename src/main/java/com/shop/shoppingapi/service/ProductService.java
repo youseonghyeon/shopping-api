@@ -5,11 +5,13 @@ import com.shop.shoppingapi.entity.converter.ProductConverter;
 import com.shop.shoppingapi.redis.SimpleProductCacheRepository;
 import com.shop.shoppingapi.redis.dto.SimpleProduct;
 import com.shop.shoppingapi.repository.ProductRepository;
+import com.shop.shoppingapi.security.utils.LazyLoadingUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -24,8 +26,16 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final SimpleProductCacheRepository simpleProductCacheRepository;
 
+    @Transactional(readOnly = true)
     public Page<Product> findProducts(Pageable pageable, String query) {
         return productRepository.findProductsInQueryDsl(pageable, query);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Product> findProductsWithReviews(Pageable pageable, String query) {
+        Page<Product> findProducts = productRepository.findProductsInQueryDsl(pageable, query);
+        findProducts.forEach(product -> LazyLoadingUtils.forceLoad(product, Product::getReviews));
+        return findProducts;
     }
 
     public boolean existsProduct(Long id) {
@@ -34,6 +44,11 @@ public class ProductService {
 
     public Optional<Product> findProductById(Long id) {
         return productRepository.findById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Product> findWithReviewsById(Long id) {
+        return productRepository.findWithReviewsById(id);
     }
 
     public List<Product> findProductsByIds(List<Long> productIds) {

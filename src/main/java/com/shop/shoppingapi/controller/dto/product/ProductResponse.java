@@ -28,19 +28,16 @@ public class ProductResponse {
     private Double discountRate;
     private BigDecimal discountedPrice;
 
+    // includeReview 이하
+    private Integer ratingAverage;
+    private Integer reviewCount;
+
     @Builder.Default
     private List<ReviewResponse> reviews = new ArrayList<>();
 
 
     public static ProductResponse from(Product product) {
-        return ProductResponse.builder()
-                .productId(product.getId())
-                .productName(product.getName())
-                .titleImage(product.getTitleImage())
-                .title(product.getTitle())
-                .price(product.getPrice())
-                .discountRate(product.getDiscountRate())
-                .discountedPrice(product.getDiscountedPrice()).build();
+        return from(product, false);
     }
 
     public static ProductResponse from(Product product, boolean includeReview) {
@@ -55,7 +52,12 @@ public class ProductResponse {
         if (includeReview) {
             List<Review> reviews = product.getReviews();
             List<ReviewResponse> reviewResponses = reviews.stream().map(ReviewResponse::from).toList();
-            productResponseBuilder.reviews(reviewResponses);
+            double average = reviews.stream().map(Review::getRating).mapToInt(Integer::intValue).average().orElse(0);
+
+            productResponseBuilder
+                    .reviews(reviewResponses)
+                    .ratingAverage((int) Math.round(average))
+                    .reviewCount(reviews.size());
         }
         return productResponseBuilder.build();
     }

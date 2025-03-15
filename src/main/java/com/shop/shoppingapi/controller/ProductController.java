@@ -35,19 +35,29 @@ public class ProductController {
     public ResponseEntity<ApiResponse<PagedModel<ProductResponse>>> getProducts(
             @PageableDefault(size = 10) Pageable pageable,
             @RequestParam(required = false) String query) {
-        Page<Product> products = productService.findProducts(pageable, query);
-        Page<ProductResponse> productsResponse = products.map(ProductResponse::from);
+        Page<Product> products = productService.findProductsWithReviews(pageable, query);
+        Page<ProductResponse> productsResponse = products.map(product -> ProductResponse.from(product, true));
         return ApiResponse.success(pagedModelAssembler.toModel(productsResponse));
     }
 
     @GetMapping("/products/{id}")
     public ResponseEntity<ApiResponse<ProductResponse>> getProduct(@PathVariable Long id) {
-        Optional<Product> product = productService.findProductById(id);
+        Optional<Product> product = productService.findWithReviewsById(id);
         if (product.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        ProductResponse productResponse = ProductResponse.from(product.get());
+        ProductResponse productResponse = ProductResponse.from(product.get(), true);
         return ApiResponse.success(productResponse);
+    }
+
+    @GetMapping("/products/ids")
+    public ResponseEntity<? extends ApiResponse<?>> getProductsByIds(@RequestParam("productIds") List<Long> productIds) {
+        List<Product> findProducts = productService.findProductsByIds(productIds);
+        if (findProducts.isEmpty()) {
+            return ApiResponse.error("상품을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+        }
+        List<ProductResponse> list = findProducts.stream().map(ProductResponse::from).toList();
+        return ApiResponse.success(list);
     }
 
     @GetMapping("/products/details")
