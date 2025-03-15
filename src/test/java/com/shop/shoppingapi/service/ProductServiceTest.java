@@ -39,7 +39,7 @@ class ProductServiceTest {
         Page<Product> productPage = new PageImpl<>(Collections.emptyList());
         when(productRepository.findAll(pageable)).thenReturn(productPage);
 
-        Page<Product> result = productService.findProducts(pageable);
+        Page<Product> result = productService.findProducts(pageable, null);
 
         assertEquals(productPage, result);
         verify(productRepository, times(1)).findAll(pageable);

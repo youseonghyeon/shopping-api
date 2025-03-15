@@ -69,7 +69,7 @@ class ProductControllerTest {
         Product product1 = TestUtils.createProduct(1L, "상품1", "image1", "title1", new BigDecimal("1000"));
         Product product2 = TestUtils.createProduct(2L, "상품2", "image2", "title2", new BigDecimal("2000"));
         Page<Product> productPage = new PageImpl<>(Arrays.asList(product1, product2), pageable, 2);
-        when(productService.findProducts(any(Pageable.class))).thenReturn(productPage);
+        when(productService.findProducts(any(Pageable.class), any())).thenReturn(productPage);
 
         // Response Page<ProductResponse> 생성
         Page<ProductResponse> responsePage = productPage.map(ProductResponse::from);

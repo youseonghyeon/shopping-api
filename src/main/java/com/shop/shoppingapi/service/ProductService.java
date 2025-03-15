@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +28,7 @@ public class ProductService {
     private final SimpleProductCacheRepository simpleProductCacheRepository;
 
     @Transactional(readOnly = true)
-    public Page<Product> findProducts(Pageable pageable, String query) {
+    public Page<Product> findProducts(Pageable pageable, @Nullable String query) {
         return productRepository.findProductsInQueryDsl(pageable, query);
     }
 

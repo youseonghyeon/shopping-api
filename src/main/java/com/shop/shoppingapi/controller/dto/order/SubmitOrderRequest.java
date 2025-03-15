@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -22,7 +23,7 @@ public class SubmitOrderRequest {
 
     @NotEmpty(message = "주문 상품 정보가 없습니다.")
     @Valid
-    private List<OrderItemRequest> items;
+    private List<OrderItemRequest> items = new ArrayList<>();
 
     @NotNull(message = "총 배송비는 필수입니다.")
     @DecimalMin(value = "0.0", inclusive = true, message = "총 배송비는 0 이상이어야 합니다.")
