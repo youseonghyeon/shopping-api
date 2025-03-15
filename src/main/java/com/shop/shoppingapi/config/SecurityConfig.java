@@ -1,6 +1,5 @@
 package com.shop.shoppingapi.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shop.shoppingapi.entity.Role;
 import com.shop.shoppingapi.security.filter.JsonUsernamePasswordAuthenticationFilter;
 import com.shop.shoppingapi.security.handler.CustomAuthenticationFailureHandler;
@@ -44,8 +43,6 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final ObjectMapper objectMapper;
 
     @Value("${cors.allowed-origins}")
     private String allowedOrigins;

@@ -17,7 +17,6 @@ jacoco {
     toolVersion = '0.8.10'
 }
 
-
 tasks.withType(Test).configureEach {
     jvmArgs += "-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains('byte-buddy-agent') }}"
 }
@@ -47,9 +46,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
-    // QueryDSL (Q 클래스 자동 생성)
-//    implementation 'com.querydsl:querydsl-jpa:5.0.0'
-//    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.ehcache:ehcache:3.10.8'
+    implementation 'org.hibernate.orm:hibernate-jcache:6.4.4.Final'
+    implementation 'javax.cache:cache-api:1.1.1'
 
     // queryDSL 설정
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'

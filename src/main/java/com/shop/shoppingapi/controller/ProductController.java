@@ -6,7 +6,7 @@ import com.shop.shoppingapi.controller.dto.product.CreateProductRequest;
 import com.shop.shoppingapi.controller.dto.product.DeleteProductRequest;
 import com.shop.shoppingapi.controller.dto.product.ProductResponse;
 import com.shop.shoppingapi.entity.Product;
-import com.shop.shoppingapi.entity.converter.ProductConverter;
+import com.shop.shoppingapi.entity.ProductConverter;
 import com.shop.shoppingapi.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

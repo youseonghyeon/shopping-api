@@ -1,9 +1,6 @@
-package com.shop.shoppingapi.entity.converter;
+package com.shop.shoppingapi.entity;
 
 import com.shop.shoppingapi.controller.dto.order.SubmitOrderRequest;
-import com.shop.shoppingapi.entity.Order;
-import com.shop.shoppingapi.entity.OrderItem;
-import com.shop.shoppingapi.entity.Product;
 import lombok.NonNull;
 import org.springframework.util.StringUtils;
 

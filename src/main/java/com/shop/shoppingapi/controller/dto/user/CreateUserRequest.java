@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @FieldMatch(first = "password", second = "passwordConfirm", message = "비밀번호가 일치하지 않습니다.")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CreateUserRequest {
 
     @NotBlank(message = "이메일을 입력해주세요.")

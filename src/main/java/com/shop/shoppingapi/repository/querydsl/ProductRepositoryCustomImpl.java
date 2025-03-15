@@ -29,7 +29,6 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         QProduct product = QProduct.product;
         QReview review = QReview.review;
 
-
         JPAQuery<Product> query = queryFactory.selectFrom(product)
                 .leftJoin(product.reviews, review)
                 .groupBy(product.id);
@@ -46,6 +45,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
                 .limit(pageable.getPageSize()); // limit 적용
         // fetch
         List<Product> results = query
+                .setHint("org.hibernate.cacheable", true)
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
@@ -55,7 +55,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         if (StringUtils.hasText(containsName)) {
             countQuery.where(product.name.containsIgnoreCase(containsName));
         }
-        Long total = countQuery.fetchOne();
+        Long total = countQuery.setHint("org.hibernate.cacheable", true).fetchOne();
 
         return new PageImpl<>(results, pageable, total);
     }

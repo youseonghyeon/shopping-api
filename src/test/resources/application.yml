@@ -1,10 +1,15 @@
 spring:
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password: password
-
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 50
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+        javax.cache.provider: org.ehcache.jsr107.EhcacheCachingProvider
+        show_sql: true
+    open-in-view: false
   mail:
     host: smtp.gmail.com
     port: 587
@@ -13,12 +18,13 @@ spring:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
-
-  jpa:
-    hibernate:
-      ddl-auto: create
-
   data:
     redis:
       host: localhost
       port: 6379
+cors:
+  allowed-origins: http://127.0.0.1
+
+security:
+  rsa:
+    private-key-path: private_key.pem

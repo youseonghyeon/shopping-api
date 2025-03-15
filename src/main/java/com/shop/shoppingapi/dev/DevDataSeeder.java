@@ -3,13 +3,14 @@ package com.shop.shoppingapi.dev;
 import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.entity.Role;
 import com.shop.shoppingapi.entity.User;
-import com.shop.shoppingapi.entity.converter.ProductConverter;
+import com.shop.shoppingapi.entity.ProductConverter;
 import com.shop.shoppingapi.repository.ProductRepository;
 import com.shop.shoppingapi.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import java.util.stream.LongStream;
 
 @Slf4j
 @Configuration
+@Profile("dev")
 @RequiredArgsConstructor
 public class DevDataSeeder {
 

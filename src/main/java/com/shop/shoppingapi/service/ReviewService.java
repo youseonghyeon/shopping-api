@@ -4,7 +4,7 @@ import com.shop.shoppingapi.controller.dto.CreateReviewRequest;
 import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.entity.Review;
 import com.shop.shoppingapi.entity.User;
-import com.shop.shoppingapi.entity.converter.ReviewConverter;
+import com.shop.shoppingapi.entity.ReviewConverter;
 import com.shop.shoppingapi.repository.ProductRepository;
 import com.shop.shoppingapi.repository.ReviewRepository;
 import com.shop.shoppingapi.repository.UserRepository;

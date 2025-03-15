@@ -2,13 +2,19 @@ package com.shop.shoppingapi.controller.dto.order;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SubmitOrderRequest {
 
     @Valid
@@ -51,6 +57,9 @@ public class SubmitOrderRequest {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class ShippingInfo {
         @NotBlank(message = "수령인 이름은 필수입니다.")
         private String recipientName;
@@ -66,6 +75,9 @@ public class SubmitOrderRequest {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class OrderItemRequest {
         @NotNull(message = "상품 ID는 필수입니다.")
         @Min(value = 1, message = "유효한 상품 ID를 입력해 주세요.")

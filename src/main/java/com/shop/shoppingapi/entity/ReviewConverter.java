@@ -1,9 +1,6 @@
-package com.shop.shoppingapi.entity.converter;
+package com.shop.shoppingapi.entity;
 
 import com.shop.shoppingapi.controller.dto.CreateReviewRequest;
-import com.shop.shoppingapi.entity.Product;
-import com.shop.shoppingapi.entity.Review;
-import com.shop.shoppingapi.entity.User;
 
 /**
  * Converter 는 꼭 비 영속 상태로 생성하도록 합니다.
@@ -11,6 +8,11 @@ import com.shop.shoppingapi.entity.User;
  */
 public class ReviewConverter {
     public static Review toEntity(CreateReviewRequest createReviewRequest, User user, Product product) {
-        return new Review(createReviewRequest.getContent(), createReviewRequest.getRating(), product, user);
+        return Review.builder()
+                .content(createReviewRequest.getContent())
+                .rating(createReviewRequest.getRating())
+                .product(product)
+                .user(user)
+                .build();
     }
 }

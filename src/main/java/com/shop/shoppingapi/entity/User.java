@@ -1,19 +1,18 @@
 package com.shop.shoppingapi.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
 @Getter
+@Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
     @Id

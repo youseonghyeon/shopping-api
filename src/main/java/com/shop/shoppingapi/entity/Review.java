@@ -1,15 +1,17 @@
 package com.shop.shoppingapi.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Getter
 @Entity
+@Table(name = "review")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(access = AccessLevel.PROTECTED)
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Review extends BaseEntity {
 
     @Id
@@ -28,11 +30,5 @@ public class Review extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-    public Review(String content, Integer rating, Product product, User user) {
-        this.content = content;
-        this.rating = rating;
-        this.product = product;
-        this.user = user;
-    }
+    
 }

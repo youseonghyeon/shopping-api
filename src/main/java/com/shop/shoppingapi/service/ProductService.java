@@ -1,7 +1,7 @@
 package com.shop.shoppingapi.service;
 
 import com.shop.shoppingapi.entity.Product;
-import com.shop.shoppingapi.entity.converter.ProductConverter;
+import com.shop.shoppingapi.entity.ProductConverter;
 import com.shop.shoppingapi.redis.SimpleProductCacheRepository;
 import com.shop.shoppingapi.redis.dto.SimpleProduct;
 import com.shop.shoppingapi.repository.ProductRepository;

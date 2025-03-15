@@ -3,6 +3,7 @@ package com.shop.shoppingapi.service;
 import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.entity.User;
 import com.shop.shoppingapi.entity.Wishlist;
+import com.shop.shoppingapi.entity.WishlistConverter;
 import com.shop.shoppingapi.repository.WishlistRepository;
 import com.shop.shoppingapi.security.utils.LazyLoadingUtils;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +53,7 @@ public class WishlistService {
         Product findProduct = productService.findProductById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
-        Wishlist wishlist = Wishlist.create(findUser, findProduct);
+        Wishlist wishlist = WishlistConverter.toEntity(findUser, findProduct);
         return wishlistRepository.save(wishlist).getId();
     }
 

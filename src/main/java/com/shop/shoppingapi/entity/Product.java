@@ -1,10 +1,8 @@
 package com.shop.shoppingapi.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,6 +13,9 @@ import java.util.List;
 @Table(name = "product")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(access = AccessLevel.PROTECTED)
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Product extends BaseEntity {
 
     @Id
@@ -39,31 +40,12 @@ public class Product extends BaseEntity {
     private Double discountRate = 0.0;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<Wishlist> wishlists = new ArrayList<>();
-
-    public Product(String name, String titleImage, String title, BigDecimal price, String description, String category, Integer stock) {
-        this.name = name;
-        this.titleImage = titleImage;
-        this.title = title;
-        this.price = price;
-        this.description = description;
-        this.category = category;
-        this.stock = stock;
-    }
-
-    public Product(String name, String titleImage, String title, BigDecimal price, String description, String category, Integer stock, Double discountRate) {
-        this.name = name;
-        this.titleImage = titleImage;
-        this.title = title;
-        this.price = price;
-        this.description = description;
-        this.category = category;
-        this.stock = stock;
-        this.discountRate = discountRate;
-    }
 
     public BigDecimal getDiscountedPrice() {
         return price.multiply(BigDecimal.valueOf(1 - discountRate));

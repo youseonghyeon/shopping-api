@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Table(name = "order_items")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+@Builder(access = AccessLevel.PROTECTED)
 public class OrderItem extends BaseEntity {
 
     @Id

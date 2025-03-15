@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+@Builder(access = AccessLevel.PROTECTED)
 public class Order extends BaseEntity {
 
     @Id

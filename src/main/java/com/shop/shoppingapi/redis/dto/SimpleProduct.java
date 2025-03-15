@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class SimpleProduct {
 
     private Long productId;
