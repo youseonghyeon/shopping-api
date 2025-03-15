@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.3'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'jacoco'
 }
 
 group = 'com.shop'
@@ -12,6 +13,10 @@ java {
         languageVersion = JavaLanguageVersion.of(21)
     }
 }
+jacoco {
+    toolVersion = '0.8.10'
+}
+
 
 tasks.withType(Test).configureEach {
     jvmArgs += "-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains('byte-buddy-agent') }}"
@@ -91,4 +96,18 @@ sourceSets {
 // gradle clean 시에 QClass 디렉토리 삭제
 clean {
     delete file(generated)
+}
+
+jacocoTestReport {
+    reports {
+        xml.required.set(true)
+        csv.required.set(false)
+        html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+    }
+}
+
+// 테스트 후 JaCoCo 리포트 생성
+test {
+    finalizedBy jacocoTestReport
 }

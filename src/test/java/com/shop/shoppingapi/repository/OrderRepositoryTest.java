@@ -46,6 +46,7 @@ class OrderRepositoryTest {
         );
         User buyer1 = UserConverter.toEntity(request1, "dummyPassword");
         buyer1 = em.persistAndFlush(buyer1);
+        Long buyer1Id = buyer1.getId();
 
         CreateUserRequest request2 = new CreateUserRequest(
                 "another@example.com",
@@ -121,7 +122,7 @@ class OrderRepositoryTest {
         assertNotNull(page, "페이지 결과는 null이 아니어야 한다.");
         assertEquals(2, page.getTotalElements(), "구매자 ID가 buyer1인 주문은 2건이어야 한다.");
         page.getContent().forEach(order ->
-                assertEquals(buyer1.getId(), order.getBuyer().getId(), "모든 주문의 buyerId는 buyer1이어야 한다.")
+                assertEquals(buyer1Id, order.getBuyer().getId(), "모든 주문의 buyerId는 buyer1이어야 한다.")
         );
     }
 }
