@@ -12,6 +12,9 @@ dockerbuild.sh
 .env
 private_key.pem
 
+### Qtype Entity Package ###
+src/main/generated
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
