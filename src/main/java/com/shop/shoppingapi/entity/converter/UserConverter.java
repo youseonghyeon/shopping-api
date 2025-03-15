@@ -13,11 +13,11 @@ import java.math.BigDecimal;
  */
 public class UserConverter {
 
-    public static User toEntity(CreateUserRequest request) {
-        return new User(request.getName(), request.getPassword(), request.getEmail(), request.getPhone(), Role.ROLE_USER);
-    }
-
     public static Product toEntity(String name, String titleImage, String title, BigDecimal price, String description, String category, Integer stock) {
         return new Product(name, titleImage, title, price, description, category, stock);
+    }
+
+    public static User toEntity(CreateUserRequest createUserRequest, String encodedPassword) {
+        return new User(createUserRequest.getName(), encodedPassword, createUserRequest.getEmail(), createUserRequest.getPhone(), Role.ROLE_USER);
     }
 }
