@@ -38,8 +38,6 @@ public class OrderConverter {
                 .discountSum(request.getDiscountSum())
                 .finalPayment(request.getTotalPayment())
                 .orderStatus("pending")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
                 .build();
     }
 

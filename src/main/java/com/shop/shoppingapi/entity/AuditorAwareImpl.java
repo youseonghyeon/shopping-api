@@ -1,5 +1,7 @@
 package com.shop.shoppingapi.entity;
 
+import com.shop.shoppingapi.security.model.CustomUserDetails;
+import com.shop.shoppingapi.security.utils.SecurityUtils;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,7 +16,8 @@ public class AuditorAwareImpl implements AuditorAware<User> {
         if (authentication == null || !authentication.isAuthenticated()) {
             return Optional.empty();
         }
-        return Optional.of((User) authentication.getPrincipal());
+        CustomUserDetails currentUser = SecurityUtils.getCurrentUser();
+        return Optional.of(currentUser.user());
     }
 
 }

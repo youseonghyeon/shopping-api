@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class Order {
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,12 +59,6 @@ public class Order {
 
     @Column(name = "order_status", nullable = false, length = 20)
     private String orderStatus; // 주문 상태 (예: pending, completed, cancelled)
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt; // 주문 생성 일시
-
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt; // 마지막 수정 일시
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems; // 주문 아이템 리스트

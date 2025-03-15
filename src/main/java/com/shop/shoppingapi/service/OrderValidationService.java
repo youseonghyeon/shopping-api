@@ -5,6 +5,7 @@ import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.entity.User;
 import com.shop.shoppingapi.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderValidationService {
@@ -83,6 +85,7 @@ public class OrderValidationService {
 
     private void validateTotalProductPrice(BigDecimal calculatedTotal, BigDecimal requestTotal) {
         if (calculatedTotal.compareTo(requestTotal) != 0) {
+            log.error("calculatedTotal: {}, requestTotal: {}", calculatedTotal, requestTotal);
             throw new IllegalArgumentException("총 상품 가격이 올바르지 않습니다.");
         }
     }

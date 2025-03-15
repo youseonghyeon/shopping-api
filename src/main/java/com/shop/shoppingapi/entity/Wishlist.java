@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class Wishlist {
+public class Wishlist extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,15 +26,10 @@ public class Wishlist {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-
     public static Wishlist create(User user, Product product) {
         return Wishlist.builder()
                 .user(user)
                 .product(product)
-                .createdAt(LocalDateTime.now())
                 .build();
     }
 }

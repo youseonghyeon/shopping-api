@@ -23,7 +23,7 @@ public class SecurityUtils {
                 .orElseThrow(() -> new AuthenticationCredentialsNotFoundException(AUTH_CREDENTIALS_NOT_FOUND));
     }
 
-    private static CustomUserDetails getCurrentUser() {
+    public static CustomUserDetails getCurrentUser() {
         return Optional.ofNullable(getCurrentAuthentication())
                 .map(Authentication::getPrincipal)
                 .filter(CustomUserDetails.class::isInstance)
