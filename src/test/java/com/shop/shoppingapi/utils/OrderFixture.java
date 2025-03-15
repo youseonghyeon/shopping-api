@@ -1,12 +1,12 @@
 package com.shop.shoppingapi.utils;
 
 import com.shop.shoppingapi.controller.dto.order.SubmitOrderRequest;
-import com.shop.shoppingapi.entity.Order;
-import com.shop.shoppingapi.entity.OrderConverter;
-import com.shop.shoppingapi.entity.User;
+import com.shop.shoppingapi.entity.*;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 public class OrderFixture {
@@ -25,7 +25,7 @@ public class OrderFixture {
 
 
     public static SubmitOrderRequest toSubmitOrderRequest() {
-        return toSubmitOrderRequest(null, null, null, null, null, null, null);
+        return toSubmitOrderRequest(null, null, null, null, null, null, null, null);
     }
     public static SubmitOrderRequest toSubmitOrderRequest(
             @Nullable SubmitOrderRequest.ShippingInfo shippingInfo,
@@ -34,7 +34,8 @@ public class OrderFixture {
             @Nullable BigDecimal totalProductPrice,
             @Nullable BigDecimal shippingFee,
             @Nullable BigDecimal discountSum,
-            @Nullable BigDecimal finalPayment
+            @Nullable BigDecimal finalPayment,
+            @NotNull Product product
     ) {
         shippingInfo = Objects.requireNonNullElseGet(shippingInfo, () -> SubmitOrderRequest.ShippingInfo.builder()
                 .recipientName(recipientNameMock)
@@ -43,8 +44,16 @@ public class OrderFixture {
                 .deliveryRequest(deliveryRequestMock)
                 .build());
 
+        List<SubmitOrderRequest.OrderItemRequest> items = List.of(
+                SubmitOrderRequest.OrderItemRequest.builder()
+                        .productId(product.getId())
+                        .quantity(1)
+                        .build()
+        );
+
         return SubmitOrderRequest.builder()
                 .shippingInfo(shippingInfo)
+                .items(items)
                 .paymentMethod(Objects.isNull(paymentMethod) ? paymentMethodMock : paymentMethod)
                 .usedPoints(Objects.isNull(usedPoints) ? usedPointsMock : usedPoints)
                 .totalProductPrice(Objects.isNull(totalProductPrice) ? totalProductPriceMock : totalProductPrice)

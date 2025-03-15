@@ -81,4 +81,21 @@ class WishlistServiceTest extends IntegrationTestSupport {
         assertEquals(0, byUserId.size());
     }
 
+    @Test
+    @DisplayName("위시리스트에 추가할 수 있는 상품의 개수가 최대치인 경우")
+    void saveWishlist_MaxSize() {
+        // given
+        User user = super.save(UserFixture.toUser());
+        for (int i = 0; i < wishlistService.MAX_WISHLIST_SIZE; i++) {
+            Product product = super.save(ProductFixture.toProduct());
+            wishlistService.save(user.getId(), product.getId());
+        }
+        Product product = super.save(ProductFixture.toProduct());
+        // when & then
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+                wishlistService.save(user.getId(), product.getId())
+        );
+        assertEquals("위시리스트에 추가할 수 있는 상품의 개수는 최대 " + wishlistService.MAX_WISHLIST_SIZE + "개입니다.", ex.getMessage());
+    }
+
 }

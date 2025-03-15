@@ -3,6 +3,7 @@ package com.shop.shoppingapi.utils;
 import com.shop.shoppingapi.controller.dto.product.CreateProductRequest;
 import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.entity.ProductConverter;
+import com.shop.shoppingapi.redis.dto.SimpleProduct;
 import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
@@ -64,4 +65,7 @@ public class ProductFixture {
         return ProductConverter.toEntity(name, titleImage, title, price, description, category, stock, discountRate);
     }
 
+    public static SimpleProduct toSimpleProduct(Product product) {
+        return ProductConverter.toSimpleProduct(product);
+    }
 }

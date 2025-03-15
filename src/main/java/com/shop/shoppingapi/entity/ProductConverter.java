@@ -36,7 +36,7 @@ public class ProductConverter {
                 .build();
     }
 
-    public static SimpleProduct toSimpleProductFromEntity(Product product) {
+    public static SimpleProduct toSimpleProduct(Product product) {
         BigDecimal price = product.getPrice();
         Double discountRate = product.getDiscountRate();
         if (price == null || discountRate == null) {

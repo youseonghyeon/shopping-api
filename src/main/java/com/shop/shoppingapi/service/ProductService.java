@@ -82,7 +82,7 @@ public class ProductService {
         Optional<Product> findProduct = productRepository.findById(productId);
         if (findProduct.isPresent()) {
             Product product = findProduct.get();
-            return ProductConverter.toSimpleProductFromEntity(product);
+            return ProductConverter.toSimpleProduct(product);
         }
 
         throw new IllegalArgumentException("Product not found");
@@ -96,7 +96,7 @@ public class ProductService {
         log.info("[Redis] cache miss: {}", productIds);
 
         List<Product> products = productRepository.findAllById(productIds);
-        List<SimpleProduct> list = products.stream().map(ProductConverter::toSimpleProductFromEntity).toList();
+        List<SimpleProduct> list = products.stream().map(ProductConverter::toSimpleProduct).toList();
         list.forEach(simpleProductCacheRepository::save);
         return list.stream().collect(Collectors.toMap(SimpleProduct::getProductId, pp -> pp));
     }
