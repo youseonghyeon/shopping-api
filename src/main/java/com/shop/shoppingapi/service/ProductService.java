@@ -24,12 +24,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final SimpleProductCacheRepository simpleProductCacheRepository;
 
-    public Page<Product> findProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
-    }
-
     public Page<Product> findProducts(Pageable pageable, String query) {
-        return productRepository.findAllByNameContaining(query, pageable);
+        return productRepository.findProductsInQueryDsl(pageable, query);
     }
 
     public boolean existsProduct(Long id) {

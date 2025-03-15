@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.LongStream;
 
@@ -58,7 +59,7 @@ public class DevDataSeeder {
 
     private void insertProducts(int mockProductSize) {
         List<Product> list = LongStream.range(0, mockProductSize)
-                .mapToObj(i -> ProductConverter.toEntity(getRandomName(), getRandomImage(), getRandomName(), getRandomPrice(), "description", "category", 100))
+                .mapToObj(i -> ProductConverter.toEntity(getRandomName(), getRandomImage(), getRandomName(), getRandomPrice(), "description", "category", 100, getRandomDiscountRate()))
                 .toList();
         productRepository.saveAll(list);
     }
@@ -73,6 +74,15 @@ public class DevDataSeeder {
 
     private BigDecimal getRandomPrice() {
         return BigDecimal.valueOf(productPrices[(int) (Math.random() * productPrices.length)]);
+    }
+
+    private double getRandomDiscountRate() {
+        int randomInt = new Random().nextInt(10);
+        if (randomInt > 4) {
+            return 0.0;
+        }
+        double v = new Random().nextDouble(0.3);
+        return Math.round(v * 100.0) / 100.0;
     }
 
 }

@@ -13,7 +13,7 @@ public class TestUtils {
     }
 
     public static User createUser(Long userId, String username, String password, String email, String phone) {
-        return new User(userId, username, password, email, phone, 0, Role.ROLE_USER);
+        return new User(userId, username, password, email, phone, 0, Role.ROLE_USER, new ArrayList<>());
     }
 
     public static User login(Long userId, String username, String password, String email, String phone) {
@@ -25,6 +25,6 @@ public class TestUtils {
     }
 
     public static Product createProduct(Long productId, String name, String titleImage, String title, BigDecimal price) {
-        return new Product(productId, name, titleImage, title, price, "description", "category", 100, 0.0, new ArrayList<>());
+        return new Product(productId, name, titleImage, title, price, "description", "category", 100, 0.0, new ArrayList<>(), new ArrayList<>());
     }
 }

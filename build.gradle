@@ -14,13 +14,7 @@ java {
 }
 
 tasks.withType(Test).configureEach {
-    jvmArgs += "-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains("byte-buddy-agent") }}"
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
+    jvmArgs += "-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains('byte-buddy-agent') }}"
 }
 
 repositories {
@@ -28,6 +22,7 @@ repositories {
 }
 
 dependencies {
+    // Spring Boot 기본 의존성
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -47,21 +42,53 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
+    // QueryDSL (Q 클래스 자동 생성)
+//    implementation 'com.querydsl:querydsl-jpa:5.0.0'
+//    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+
+    // queryDSL 설정
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    implementation 'com.querydsl:querydsl-core'
+    implementation 'com.querydsl:querydsl-collections'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+    // Lombok 설정
     compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'com.h2database:h2'
-    runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // Test
+    // DB 및 테스트 의존성
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.mockito:mockito-inline:5.2.0'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
-
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+def generated = 'src/main/generated'
+
+
+// querydsl QClass 파일 생성 위치를 지정
+tasks.withType(JavaCompile) {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
+}
+
+// java source set 에 querydsl QClass 위치 추가
+sourceSets {
+    main.java.srcDirs += [ generated ]
+}
+
+// gradle clean 시에 QClass 디렉토리 삭제
+clean {
+    delete file(generated)
 }

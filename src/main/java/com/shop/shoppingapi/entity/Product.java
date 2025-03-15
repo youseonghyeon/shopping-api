@@ -41,6 +41,9 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<Review> reviews = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<Wishlist> wishlists = new ArrayList<>();
+
     public Product(String name, String titleImage, String title, BigDecimal price, String description, String category, Integer stock) {
         this.name = name;
         this.titleImage = titleImage;
