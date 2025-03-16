@@ -43,7 +43,7 @@ import java.util.List;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 1800)
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 1209600) // 14일
 public class SecurityConfig {
 
     @Value("${cors.allowed-origins}")

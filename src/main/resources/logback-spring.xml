@@ -3,7 +3,7 @@
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{20} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}] [%thread] %-5level|%logger{0} - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -13,9 +13,10 @@
             <fileNamePattern>/applog/shop-api.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
             <totalSizeCap>3GB</totalSizeCap>
+            <maxFileSize>100MB</maxFileSize>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{20} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}] [%thread] %-5level|%logger{0} - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -26,7 +27,7 @@
             <maxHistory>1</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%level] %logger{0} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%X{traceId}] %-5level|%logger{0} - %msg%n</pattern>
         </encoder>
     </appender>
 

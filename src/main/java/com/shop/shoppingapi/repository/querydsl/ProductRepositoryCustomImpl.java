@@ -8,6 +8,7 @@ import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.entity.QProduct;
 import com.shop.shoppingapi.entity.QReview;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,6 +19,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
@@ -81,9 +83,10 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
                     review.rating.sum().divide(review.count().coalesce(1L))
                             .multiply(product.wishlists.size().divide(99L).coalesce(1))
             );
-            default -> new OrderSpecifier<>(sorting,
-                    product.id
-            );
+            default -> {
+                log.warn("Unknown sorting property: {}", order.getProperty());
+                yield new OrderSpecifier<>(sorting, product.id);
+            }
         };
     }
 

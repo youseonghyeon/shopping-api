@@ -40,8 +40,7 @@ public class CartController {
     @PostMapping("/cart/create")
     public ResponseEntity<ApiResponse<String>> addCart(@Validated @RequestBody CreateCartRequest createCartRequest) {
         Long userId = SecurityUtils.getUserId();
-        log.info("userId: {} CreateCartRequest: {}", userId, createCartRequest);  // 로그 추가
-
+        log.info("Cart registered - user: {}, createCartRequest: {}", userId, createCartRequest);  // 로그 추가
         cartService.addCartItem(userId, createCartRequest.getProductId(), createCartRequest.getQuantity());
         return ApiResponse.success("장바구니에 상품을 추가하였습니다.", "장바구니에 상품을 추가하였습니다.");
     }
@@ -49,6 +48,7 @@ public class CartController {
     @PostMapping("/cart/delete")
     public ResponseEntity<ApiResponse<String>> deleteCart(@Validated @RequestBody DeleteCartRequest deleteCartRequest) {
         Long userId = SecurityUtils.getUserId();
+        log.info("Cart deleted - user: {}, deleteCartRequest: {}", userId, deleteCartRequest);
         cartService.deleteCartItem(userId, deleteCartRequest.getProductIds());
         return ApiResponse.success("장바구니에서 상품을 삭제하였습니다.", "장바구니에서 상품을 삭제하였습니다.");
     }
@@ -56,6 +56,7 @@ public class CartController {
     @PostMapping("/cart/update")
     public ResponseEntity<ApiResponse<String>> updateCart(@Validated @RequestBody UpdateCartRequest updateCartRequest) {
         Long userId = SecurityUtils.getUserId();
+        log.info("Cart updated - user: {}, updateCartRequest: {}", userId, updateCartRequest);
         cartService.updateCartItem(userId, updateCartRequest.getProductId(), updateCartRequest.getQuantity());
         return ApiResponse.success("장바구니에 상품을 수정하였습니다.", "장바구니에 상품을 수정하였습니다.");
     }

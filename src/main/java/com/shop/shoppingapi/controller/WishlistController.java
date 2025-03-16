@@ -43,6 +43,7 @@ public class WishlistController {
     @PostMapping("/wishlist/create")
     public ResponseEntity<ApiResponse<String>> saveWishlist(@RequestBody CreateWishlistRequest createWishlistRequest) {
         Long userId = SecurityUtils.getUserId();
+        log.info("Review registered - userId: {}, createWishlistRequest: {}", userId, createWishlistRequest);
         wishlistService.save(userId, createWishlistRequest.getProductId());
         return ApiResponse.success("위시리스트에 상품을 추가하였습니다.");
     }
@@ -50,6 +51,7 @@ public class WishlistController {
     @PostMapping("/wishlist/delete")
     public ResponseEntity<ApiResponse<String>> deleteWishlist(@RequestBody DeleteWishlistRequest deleteWishlistRequest) {
         Long userId = SecurityUtils.getUserId();
+        log.info("Review deleted - userId: {}, deleteWishlistRequest: {}", userId, deleteWishlistRequest);
         wishlistService.deleteByUserIdAndProductId(userId, deleteWishlistRequest.getProductId());
         return ApiResponse.success("위시리스트에서 상품을 삭제하였습니다.");
     }

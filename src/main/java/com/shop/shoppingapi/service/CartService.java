@@ -1,15 +1,19 @@
 package com.shop.shoppingapi.service;
 
 import com.shop.shoppingapi.controller.dto.cart.CartResponse;
+import com.shop.shoppingapi.exception.ApiResponseException;
 import com.shop.shoppingapi.redis.CartCacheRepository;
 import com.shop.shoppingapi.redis.dto.CartItem;
 import com.shop.shoppingapi.redis.dto.SimpleProduct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CartService {
@@ -19,7 +23,8 @@ public class CartService {
 
     public void addCartItem(Long userId, Long productId, int quantity) {
         if (!productService.existsProductById(productId)) {
-            throw new IllegalArgumentException("존재하지 않는 상품입니다.");
+            log.error("Product not found - productId: {}", productId);
+            throw new ApiResponseException("Product not Found", HttpStatus.BAD_REQUEST);
         }
         int existingQuantity = cartCacheRepository.getCartItemQuantity(userId, productId);
         cartCacheRepository.addOrUpdateCartItem(userId, productId, existingQuantity + quantity);
@@ -29,6 +34,7 @@ public class CartService {
         if (quantity > 0) {
             cartCacheRepository.addOrUpdateCartItem(userId, productId, quantity);
         } else {
+            log.warn("Delete cart item (request quantity: {})- userId: {}, productId: {}", quantity, userId, productId);
             this.deleteCartItem(userId, List.of(productId));
         }
     }

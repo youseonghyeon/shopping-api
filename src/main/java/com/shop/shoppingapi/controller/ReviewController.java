@@ -6,11 +6,13 @@ import com.shop.shoppingapi.entity.Review;
 import com.shop.shoppingapi.security.utils.SecurityUtils;
 import com.shop.shoppingapi.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -27,6 +29,7 @@ public class ReviewController {
     @PostMapping("/reviews/create")
     public ResponseEntity<ApiResponse<Long>> createReview(@RequestBody CreateReviewRequest review) {
         Long userId = SecurityUtils.getUserId();
+        log.info("Review registered - user: {}, review: {}", userId, review);
         Long reviewId = reviewService.createReview(review, userId);
         return ApiResponse.success(reviewId, "리뷰가 등록되었습니다.");
     }

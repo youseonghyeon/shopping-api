@@ -22,7 +22,6 @@ public class UserController {
     private final UserService userService;
     private final Integer SIGNUP_EVENT_POINT = 1_000_000;
 
-
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<SimpleUserResponse>> me() {
         Long userId = SecurityUtils.getUserId();
