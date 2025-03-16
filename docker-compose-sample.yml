@@ -52,6 +52,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: shop123
     volumes:
       - /applog/api:/applog
+      - /app/config:/app/config
     networks:
       - app_network
 
