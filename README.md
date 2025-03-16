@@ -11,6 +11,8 @@ Spring Boot, Spring Security, Spring Data JPA/Hibernate, QueryDSL, Redis, Kafka 
 - 스마트폰에 최적화 되어 개발되었습니다.
 
 ## 주요 기능
+- **Vue 3 를 이용한 프론트 개발**
+    - 소스 : https://github.com/youseonghyeon/shopping-vue.git
 - **선착순 이벤트를 위한 인벤트성 아키텍처 설계 및 모듈 개발**
     - 모듈 소스 : https://github.com/youseonghyeon/shipping-event.git
     - L4 부하분산과 Redis Atomic 연산을 통한 이벤트 처리
