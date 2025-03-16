@@ -2,6 +2,7 @@ package com.shop.shoppingapi.controller;
 
 import com.shop.shoppingapi.controller.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +22,10 @@ public class EventController {
 
     private Boolean isOpen = false;
     // L4 로드벨런서를 가정하고 작성
-    String eventL4Ip = "127.0.0.1";
-    int eventL4Port = 8090;
+    @Value("${event.l4.ip:127.0.0.1}")
+    private String eventL4Ip;
+    @Value("${event.l4.port:8090}")
+    private Integer eventL4Port;
 
     // 이벤트가 열렸는지 확인
     @GetMapping("/event/open")
@@ -37,7 +40,7 @@ public class EventController {
 
         String couponStatusUrl = "http://" + eventL4Ip + ":" + eventL4Port + "/api/coupon/status";
         String response = restTemplate.getForObject(couponStatusUrl, String.class);
-        String parsedData = response;
+        String parsedData = response; // TODO data parsing
         return ApiResponse.success(parsedData, "이벤트 페이지 접근이 가능합니다.");
     }
 
