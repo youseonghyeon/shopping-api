@@ -3,8 +3,8 @@ package com.shop.shoppingapi.service;
 import com.shop.shoppingapi.controller.dto.CreateReviewRequest;
 import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.entity.Review;
-import com.shop.shoppingapi.entity.User;
 import com.shop.shoppingapi.entity.ReviewConverter;
+import com.shop.shoppingapi.entity.User;
 import com.shop.shoppingapi.repository.ProductRepository;
 import com.shop.shoppingapi.repository.ReviewRepository;
 import com.shop.shoppingapi.repository.UserRepository;
@@ -24,10 +24,6 @@ public class ReviewService {
 
     public List<Review> findReviewsByProductId(Long productId) {
         return reviewRepository.findByProductId(productId);
-    }
-
-    public Long createReview(Review review) {
-        return null;
     }
 
     @Transactional

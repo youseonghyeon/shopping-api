@@ -26,6 +26,34 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
+    private static List<? extends OrderSpecifier<?>> extracted(Pageable pageable, QProduct product, QReview review) {
+        return pageable.getSort().stream().map(order -> getOrderSpecifier(order, product, review)).toList();
+    }
+
+    @NotNull
+    private static OrderSpecifier<?> getOrderSpecifier(Sort.Order order, QProduct product, QReview review) {
+        Order sorting = order.isAscending() ? Order.ASC : Order.DESC;
+        return switch (order.getProperty()) {
+            // 가격순 정렬 시 할인율을 반영한 가격으로 정렬
+            case "price" -> new OrderSpecifier<>(sorting,
+                    product.price.subtract(product.price.multiply(product.discountRate))
+            );
+            // 해당 제품의 평균 별점을 기반으로 정렬
+            case "rating" -> new OrderSpecifier<>(sorting,
+                    review.rating.sum().divide(review.count().coalesce(1L))
+            );
+            // rating을 기반으로 정렬하되, 위시리스트 수를 고려하여 정렬
+            case "recommended" -> new OrderSpecifier<>(sorting,
+                    review.rating.sum().divide(review.count().coalesce(1L))
+                            .multiply(product.wishlists.size().divide(99L).coalesce(1))
+            );
+            default -> {
+                log.warn("Unknown sorting property: {}", order.getProperty());
+                yield new OrderSpecifier<>(sorting, product.id);
+            }
+        };
+    }
+
     @Override
     public Page<Product> findProductsInQueryDsl(Pageable pageable, String containsName) {
         QProduct product = QProduct.product;
@@ -60,34 +88,6 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         Long total = countQuery.setHint("org.hibernate.cacheable", true).fetchOne();
 
         return new PageImpl<>(results, pageable, total);
-    }
-
-    private static List<? extends OrderSpecifier<?>> extracted(Pageable pageable, QProduct product, QReview review) {
-        return pageable.getSort().stream().map(order -> getOrderSpecifier(order, product, review)).toList();
-    }
-
-    @NotNull
-    private static OrderSpecifier<?> getOrderSpecifier(Sort.Order order, QProduct product, QReview review) {
-        Order sorting = order.isAscending() ? Order.ASC : Order.DESC;
-        return switch (order.getProperty()) {
-            // 가격순 정렬 시 할인율을 반영한 가격으로 정렬
-            case "price" -> new OrderSpecifier<>(sorting,
-                    product.price.subtract(product.price.multiply(product.discountRate))
-            );
-            // 해당 제품의 평균 별점을 기반으로 정렬
-            case "rating" -> new OrderSpecifier<>(sorting,
-                    review.rating.sum().divide(review.count().coalesce(1L))
-            );
-            // rating을 기반으로 정렬하되, 위시리스트 수를 고려하여 정렬
-            case "recommended" -> new OrderSpecifier<>(sorting,
-                    review.rating.sum().divide(review.count().coalesce(1L))
-                            .multiply(product.wishlists.size().divide(99L).coalesce(1))
-            );
-            default -> {
-                log.warn("Unknown sorting property: {}", order.getProperty());
-                yield new OrderSpecifier<>(sorting, product.id);
-            }
-        };
     }
 
 

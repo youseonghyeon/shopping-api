@@ -8,6 +8,7 @@ import com.shop.shoppingapi.security.utils.SecurityUtils;
 import com.shop.shoppingapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final Integer SIGNUP_EVENT_POINT = 1_000_000;
+
+    @Value("#{signup.event.point:10000")
+    private Integer SIGNUP_EVENT_POINT;
 
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<SimpleUserResponse>> me() {

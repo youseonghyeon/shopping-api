@@ -26,6 +26,7 @@ public class UserService {
         validateDuplicateUser(request.getEmail(), request.getPhone());
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         User newUser = UserConverter.toEntity(request, encodedPassword);
+
         userRepository.save(newUser);
         return newUser.getId();
     }
