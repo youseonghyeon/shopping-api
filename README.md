@@ -27,6 +27,9 @@ Spring Boot, Spring Security, Spring Data JPA/Hibernate, QueryDSL, Redis, Kafka 
     - ApiResponse 클래스 규격을 사용하여 일관된 응답 형식 제공
 - **데이터 영속성**
     - Spring Data JPA/Hibernate, QueryDSL 를 통한 ORM 기반 데이터베이스 연동
+- **쿼리 캐싱 및 2차 캐싱**
+    - QueryDSL 쿼리 캐싱을 이용한 상품 조회 페이지 최적화
+    - Redis 캐싱을 이용한 상품 정보 조회 최적화
 
 ## 기술 스택
 
