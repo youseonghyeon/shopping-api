@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -96,7 +97,7 @@ class ProductServiceTest extends IntegrationTestSupport {
         SimpleProduct cachedProduct = ProductFixture.toSimpleProduct(product1);
         simpleProductCacheRepository.save(cachedProduct);
 
-        List<Long> productIds = List.of(product1.getId(), product2.getId(), product3.getId());
+        Set<Long> productIds = Set.of(product1.getId(), product2.getId(), product3.getId());
 
         // when
         Map<Long, SimpleProduct> simpleProducts = productService.findSimpleProductByIds(productIds);

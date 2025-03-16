@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -45,7 +47,7 @@ public class CartService {
 
     public List<CartResponse> findCarts(Long userId) {
         List<CartItem> cartItems = cartCacheRepository.getCartItems(userId);
-        List<Long> productIds = cartItems.stream().map(CartItem::getProductId).toList();
+        Set<Long> productIds = cartItems.stream().map(CartItem::getProductId).collect(Collectors.toSet());
         Map<Long, SimpleProduct> simpleProductByIds = productService.findSimpleProductByIds(productIds);
         return cartItems.stream()
                 .map(cartItem -> {

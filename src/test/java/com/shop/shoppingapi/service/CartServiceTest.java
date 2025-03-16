@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -131,7 +132,7 @@ class CartServiceTest {
                 100L, simpleProduct1,
                 101L, simpleProduct2
         );
-        when(productService.findSimpleProductByIds(Arrays.asList(100L, 101L))).thenReturn(simpleProductByIds);
+        when(productService.findSimpleProductByIds(Set.of(100L, 101L))).thenReturn(simpleProductByIds);
 
         List<CartResponse> responses = cartService.findCarts(userId);
         assertNotNull(responses);

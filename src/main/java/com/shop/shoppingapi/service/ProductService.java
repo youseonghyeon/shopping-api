@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -35,12 +36,9 @@ public class ProductService {
     @Transactional(readOnly = true)
     public Page<Product> findProductsWithReviews(Pageable pageable, String query) {
         Page<Product> findProducts = productRepository.findProductsInQueryDsl(pageable, query);
+        // Fetch reviews
         findProducts.forEach(product -> LazyLoadingUtils.forceLoad(product, Product::getReviews));
         return findProducts;
-    }
-
-    public boolean existsProduct(Long id) {
-        return productRepository.existsById(id);
     }
 
     public Optional<Product> findProductById(Long id) {
@@ -56,52 +54,50 @@ public class ProductService {
         return productRepository.findAllById(productIds);
     }
 
+    public boolean existsProductById(Long productId) {
+        return productRepository.existsById(productId);
+    }
+
     public long createProduct(Product product) {
         return productRepository.save(product).getId();
     }
 
-    public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
-    }
-
-    public void updateProduct(Long productId, Product productForUpdate) {
-        findProductById(productId).ifPresent(product -> {
-            // TODO: Implement update logic
-            throw new UnsupportedOperationException("Not implemented yet");
-        });
-        // TODO: Implement update logic
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
     public SimpleProduct findSimpleProductById(Long productId) {
-        Optional<SimpleProduct> redisSimpleProduct = simpleProductCacheRepository.findById(productId);
-        if (redisSimpleProduct.isPresent()) {
-            return redisSimpleProduct.get();
-        }
-
-        Optional<Product> findProduct = productRepository.findById(productId);
-        if (findProduct.isPresent()) {
-            Product product = findProduct.get();
-            return ProductConverter.toSimpleProduct(product);
-        }
-
-        throw new IllegalArgumentException("Product not found");
+        return simpleProductCacheRepository.findById(productId)
+                .orElseGet(() -> {
+                    log.debug("[Redis] Cache miss for productId: {}", productId);
+                    return convertAndCacheSimpleProduct(productId);
+                });
     }
 
-    public Map<Long, SimpleProduct> findSimpleProductByIds(List<Long> productIds) {
+    private SimpleProduct convertAndCacheSimpleProduct(Long productId) {
+        return productRepository.findById(productId)
+                .map(this::convertAndSaveSimpleProduct)
+                .orElseThrow(() -> {
+                    log.warn("[Product] Not found - productId: {}", productId);
+                    return new IllegalArgumentException("Product not found: " + productId);
+                });
+    }
+
+    public Map<Long, SimpleProduct> findSimpleProductByIds(Set<Long> productIds) {
         Map<Long, SimpleProduct> cachedSimpleProduct = simpleProductCacheRepository.findByIds(productIds);
         if (cachedSimpleProduct.size() == productIds.size()) {
+            log.debug("[Redis] Cache hit");
             return cachedSimpleProduct;
         }
-        log.info("[Redis] cache miss: {}", productIds);
+        log.debug("[Redis] cache miss: {}", productIds);
 
         List<Product> products = productRepository.findAllById(productIds);
-        List<SimpleProduct> list = products.stream().map(ProductConverter::toSimpleProduct).toList();
-        list.forEach(simpleProductCacheRepository::save);
-        return list.stream().collect(Collectors.toMap(SimpleProduct::getProductId, pp -> pp));
+        List<SimpleProduct> simpleProducts = products.stream().map(ProductConverter::toSimpleProduct).toList();
+        simpleProducts.forEach(simpleProductCacheRepository::save);
+        return simpleProducts.stream().collect(Collectors.toMap(SimpleProduct::getProductId, sp -> sp));
     }
 
-    public boolean existsProductById(Long productId) {
-        return productRepository.existsById(productId);
+    private SimpleProduct convertAndSaveSimpleProduct(Product product) {
+        SimpleProduct simpleProduct = ProductConverter.toSimpleProduct(product);
+        simpleProductCacheRepository.save(simpleProduct);
+        log.debug("[Redis] Cached product - productId: {}", simpleProduct.getProductId());
+        return simpleProduct;
     }
+
 }

@@ -32,9 +32,7 @@ public class ProductController {
     private final CustomPagedModelAssembler<ProductResponse> pagedModelAssembler;
 
     @GetMapping("/products")
-    public ResponseEntity<ApiResponse<PagedModel<ProductResponse>>> getProducts(
-            @PageableDefault(size = 10) Pageable pageable,
-            @RequestParam(required = false) String query) {
+    public ResponseEntity<ApiResponse<PagedModel<ProductResponse>>> getProducts(@PageableDefault(size = 10) Pageable pageable, @RequestParam(required = false) String query) {
         Page<Product> products = productService.findProductsWithReviews(pageable, query);
         Page<ProductResponse> productsResponse = products.map(product -> ProductResponse.from(product, true));
         return ApiResponse.success(pagedModelAssembler.toModel(productsResponse));

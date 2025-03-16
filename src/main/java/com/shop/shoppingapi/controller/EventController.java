@@ -37,7 +37,6 @@ public class EventController {
     // 이벤트 잔여 수량이 있는지 확인
     @GetMapping("/event/coupon/status")
     public ResponseEntity<ApiResponse<String>> getCoupon() {
-
         String couponStatusUrl = "http://" + eventL4Ip + ":" + eventL4Port + "/api/coupon/status";
         String response = restTemplate.getForObject(couponStatusUrl, String.class);
         String parsedData = response; // TODO data parsing
