@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class SimpleProductCacheRepository {
 
     // 상품 가격 저장
     public void save(SimpleProduct simpleProduct) {
-        getValueOps().set(PRODUCT_PRICE_PREFIX + ":" + simpleProduct.getProductId(), simpleProduct);
+        getValueOps().set(PRODUCT_PRICE_PREFIX + ":" + simpleProduct.getProductId(), simpleProduct, 30, TimeUnit.MINUTES);
     }
 
     // 단일 상품 가격 조회

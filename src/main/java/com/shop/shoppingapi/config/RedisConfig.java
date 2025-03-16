@@ -24,7 +24,7 @@ public class RedisConfig {
         return new LettuceConnectionFactory(redisHost, redisPort);
     }
 
-    @Bean
+    @Bean("redisTemplate")
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
@@ -34,7 +34,7 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean
+    @Bean("simpleProductRedisTemplate")
     public RedisTemplate<String, SimpleProduct> simpleProductRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, SimpleProduct> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
@@ -43,4 +43,5 @@ public class RedisConfig {
         template.afterPropertiesSet();
         return template;
     }
+
 }
