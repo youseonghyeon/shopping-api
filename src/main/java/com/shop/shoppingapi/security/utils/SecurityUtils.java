@@ -1,7 +1,7 @@
 package com.shop.shoppingapi.security.utils;
 
-import com.shop.shoppingapi.entity.User;
 import com.shop.shoppingapi.security.model.CustomUserDetails;
+import com.shop.shoppingapi.security.model.SimpleUser;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -18,8 +18,8 @@ public class SecurityUtils {
 
     public static Long getUserId() {
         return Optional.ofNullable(getCurrentUser())
-                .map(CustomUserDetails::user)
-                .map(User::getId)
+                .map(CustomUserDetails::simpleUser)
+                .map(SimpleUser::getId)
                 .orElseThrow(() -> new AuthenticationCredentialsNotFoundException(AUTH_CREDENTIALS_NOT_FOUND));
     }
 

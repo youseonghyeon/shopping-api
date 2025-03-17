@@ -1,6 +1,6 @@
 package com.shop.shoppingapi.security.model;
 
-import com.shop.shoppingapi.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,25 +8,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public record CustomUserDetails(User user) implements UserDetails {
+public record CustomUserDetails(SimpleUser simpleUser) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(user.getRole().name()));
+        return List.of(new SimpleGrantedAuthority(simpleUser.getRole().name()));
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return simpleUser.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return simpleUser.getEmail();
     }
 
     public Long getUserId() {
-        return user.getId();
+        return simpleUser.getId();
     }
 
     @Override

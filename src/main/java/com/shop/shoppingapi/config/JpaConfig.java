@@ -3,6 +3,7 @@ package com.shop.shoppingapi.config;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shop.shoppingapi.entity.AuditorAwareImpl;
 import com.shop.shoppingapi.entity.User;
+import com.shop.shoppingapi.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.context.annotation.Bean;
@@ -18,8 +19,8 @@ public class JpaConfig {
     private EntityManager entityManager;
 
     @Bean
-    public AuditorAware<User> auditorAware() {
-        return new AuditorAwareImpl();
+    public AuditorAware<User> auditorAware(UserRepository userRepository) {
+        return new AuditorAwareImpl(userRepository);
     }
 
     @Bean
