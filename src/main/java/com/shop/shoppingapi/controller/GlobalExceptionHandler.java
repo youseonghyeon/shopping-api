@@ -2,7 +2,9 @@ package com.shop.shoppingapi.controller;
 
 import com.shop.shoppingapi.controller.dto.ApiResponse;
 import com.shop.shoppingapi.exception.ApiResponseException;
+import com.shop.shoppingapi.exception.BusinessValidationException;
 import com.shop.shoppingapi.service.DuplicateResourceException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,19 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<? extends ApiResponse<?>> handleEntityNotFoundException(EntityNotFoundException e) {
+        log.warn(e.getMessage());
+        // TODO 에러 메시지에 대한 정리 필요
+        return ApiResponse.error("잘못된 접근입니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BusinessValidationException.class)
+    public ResponseEntity<? extends ApiResponse<?>> handleBusinessValidationException(BusinessValidationException e) {
+        log.warn(e.getMessage());
+        return ApiResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<Map<String, String>> handleDuplicateException(DuplicateResourceException ex) {

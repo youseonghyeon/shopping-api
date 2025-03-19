@@ -39,7 +39,7 @@ public class ReviewService {
         // validate user has purchased product
         orderValidationService.validateUserHasOrder(orderItemId, userId);
         if (orderItem.getReview() != null) {
-            throw new BusinessValidationException("already reviewed product. productId: " + productId + ", userId: " + userId);
+            throw new BusinessValidationException("이미 리뷰를 작성한 상품입니다.");
         }
         // create review
         Review review = ReviewConverter.toEntity(createReviewRequest, findUser, findProduct, orderItem);
