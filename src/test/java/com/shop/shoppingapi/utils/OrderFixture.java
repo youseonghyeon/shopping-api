@@ -27,6 +27,7 @@ public class OrderFixture {
     public static SubmitOrderRequest toSubmitOrderRequest() {
         return toSubmitOrderRequest(null, null, null, null, null, null, null, null);
     }
+
     public static SubmitOrderRequest toSubmitOrderRequest(
             @Nullable SubmitOrderRequest.ShippingInfo shippingInfo,
             @Nullable String paymentMethod,
@@ -74,4 +75,15 @@ public class OrderFixture {
 
         return OrderConverter.toEntity(submitOrderRequest, orderNumber, user);
     }
+
+    public static Order toOrder(User user, OrderItem... orderItems) {
+        return toOrder(user, List.of(orderItems));
+    }
+
+    public static Order toOrder(User user, List<OrderItem> orderItems) {
+        return OrderConverter.toEntity("ORDER123456", user, "홍길동", "서울시 테스트구 테스트로 123",
+                "01012345678", "문 앞에 놓아주세요.", "CARD", 0,
+                BigDecimal.valueOf(30000), BigDecimal.valueOf(3000), BigDecimal.valueOf(1000), BigDecimal.valueOf(32000), "pending", orderItems);
+    }
+
 }

@@ -18,12 +18,15 @@ public class OrderItem extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @JoinColumn(name = "product_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
+
+    @OneToOne(mappedBy = "orderItem")
+    private Review review;
 
     @Column(nullable = false)
     private int quantity;
@@ -39,4 +42,5 @@ public class OrderItem extends BaseEntity {
 
     @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice; // 할인 적용 후 단가 * quantity
+
 }

@@ -7,10 +7,11 @@ import com.shop.shoppingapi.controller.dto.CreateReviewRequest;
  * 만약 팩토리가 필요 할 경우 기존 toEntity 를 수정하지 않고 추가합니다.
  */
 public class ReviewConverter {
-    public static Review toEntity(CreateReviewRequest createReviewRequest, User user, Product product) {
+    public static Review toEntity(CreateReviewRequest createReviewRequest, User user, Product product, OrderItem orderItem) {
         return Review.builder()
                 .content(createReviewRequest.getContent())
                 .rating(createReviewRequest.getRating())
+                .orderItem(orderItem)
                 .product(product)
                 .user(user)
                 .build();

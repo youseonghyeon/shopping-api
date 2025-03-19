@@ -27,10 +27,10 @@ public class ReviewController {
     }
 
     @PostMapping("/reviews/create")
-    public ResponseEntity<ApiResponse<Long>> createReview(@RequestBody CreateReviewRequest review) {
+    public ResponseEntity<ApiResponse<Long>> createReview(@RequestBody CreateReviewRequest createReviewRequest) {
         Long userId = SecurityUtils.getUserId();
-        log.info("Review registered - user: {}, review: {}", userId, review);
-        Long reviewId = reviewService.createReview(review, userId);
+        log.info("Review registered - user: {}, review: {}", userId, createReviewRequest);
+        Long reviewId = reviewService.createReview(createReviewRequest, userId);
         return ApiResponse.success(reviewId, "리뷰가 등록되었습니다.");
     }
 }

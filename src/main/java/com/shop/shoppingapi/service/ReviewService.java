@@ -1,13 +1,13 @@
 package com.shop.shoppingapi.service;
 
 import com.shop.shoppingapi.controller.dto.CreateReviewRequest;
-import com.shop.shoppingapi.entity.Product;
-import com.shop.shoppingapi.entity.Review;
-import com.shop.shoppingapi.entity.ReviewConverter;
-import com.shop.shoppingapi.entity.User;
+import com.shop.shoppingapi.entity.*;
+import com.shop.shoppingapi.exception.BusinessValidationException;
+import com.shop.shoppingapi.repository.OrderItemRepository;
 import com.shop.shoppingapi.repository.ProductRepository;
 import com.shop.shoppingapi.repository.ReviewRepository;
 import com.shop.shoppingapi.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +18,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReviewService {
 
+    private final OrderValidationService orderValidationService;
+
+    private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
@@ -28,11 +31,19 @@ public class ReviewService {
 
     @Transactional
     public Long createReview(CreateReviewRequest createReviewRequest, Long userId) {
-        User findUser = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Product findProduct = productRepository.findById(createReviewRequest.getProductId()).orElseThrow(() -> new IllegalArgumentException("Product not found"));
-        // TODO 해당 user가 상품을 구매했는지 검증 로직 추가
-
-        Review review = ReviewConverter.toEntity(createReviewRequest, findUser, findProduct);
-        return reviewRepository.save(review).getId();
+        Long productId = createReviewRequest.getProductId();
+        Long orderItemId = createReviewRequest.getOrderItemId();
+        User findUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found. userId: " + userId));
+        Product findProduct = productRepository.findById(productId).orElseThrow(() -> new EntityNotFoundException("Product not found. productId: " + productId));
+        OrderItem orderItem = orderItemRepository.findById(orderItemId).orElseThrow(() -> new EntityNotFoundException("OrderItem not found. orderItemId: " + orderItemId));
+        // validate user has purchased product
+        orderValidationService.validateUserHasOrder(orderItemId, userId);
+        if (orderItem.getReview() != null) {
+            throw new BusinessValidationException("already reviewed product. productId: " + productId + ", userId: " + userId);
+        }
+        // create review
+        Review review = ReviewConverter.toEntity(createReviewRequest, findUser, findProduct, orderItem);
+        Review savedReview = reviewRepository.save(review);
+        return savedReview.getId();
     }
 }

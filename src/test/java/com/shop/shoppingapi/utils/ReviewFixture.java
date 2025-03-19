@@ -1,10 +1,7 @@
 package com.shop.shoppingapi.utils;
 
 import com.shop.shoppingapi.controller.dto.CreateReviewRequest;
-import com.shop.shoppingapi.entity.Product;
-import com.shop.shoppingapi.entity.Review;
-import com.shop.shoppingapi.entity.ReviewConverter;
-import com.shop.shoppingapi.entity.User;
+import com.shop.shoppingapi.entity.*;
 import org.springframework.lang.Nullable;
 
 import java.util.Objects;
@@ -33,9 +30,10 @@ public class ReviewFixture {
         rating = Objects.isNull(rating) ? ratingMock : rating;
         user = Objects.requireNonNullElseGet(user, UserFixture::toUser);
         product = Objects.requireNonNullElseGet(product, ProductFixture::toProduct);
+        OrderItem orderItem = OrderItemFixture.toOrderItem(product);
 
         CreateReviewRequest createReviewRequest = toCreateReviewRequest(content, rating);
 
-        return ReviewConverter.toEntity(createReviewRequest, user, product);
+        return ReviewConverter.toEntity(createReviewRequest, user, product, orderItem);
     }
 }

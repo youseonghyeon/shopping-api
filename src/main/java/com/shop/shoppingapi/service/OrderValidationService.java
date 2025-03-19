@@ -1,8 +1,13 @@
 package com.shop.shoppingapi.service;
 
 import com.shop.shoppingapi.controller.dto.order.SubmitOrderRequest;
+import com.shop.shoppingapi.entity.Order;
+import com.shop.shoppingapi.entity.OrderItem;
 import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.entity.User;
+import com.shop.shoppingapi.exception.BusinessValidationException;
+import com.shop.shoppingapi.repository.OrderItemRepository;
+import com.shop.shoppingapi.repository.OrderRepository;
 import com.shop.shoppingapi.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -20,6 +26,8 @@ import java.util.stream.Collectors;
 public class OrderValidationService {
 
     private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
 
     @Transactional(readOnly = true)
     public void validateOrder(SubmitOrderRequest request) {
@@ -94,5 +102,19 @@ public class OrderValidationService {
         if (expectedFinalPayment.compareTo(requestFinalPayment) != 0) {
             throw new IllegalArgumentException("최종 결제 금액이 올바르지 않습니다.");
         }
+    }
+
+    public void validateUserHasOrder(Long orderItemId, Long userId) {
+        OrderItem orderItem = orderItemRepository.findById(orderItemId).orElseThrow(() -> new BusinessValidationException("not found orderItem. orderItemId: " + orderItemId));
+        User buyer = orderItem.getOrder().getBuyer();
+        if (!buyer.getId().equals(userId)) {
+            throw new BusinessValidationException("not matched orderItem. orderItemId: " + orderItemId + ", userId: " + userId);
+        }
+    }
+
+    public void hasDuplicateReview(Long orderItemId, Long userId) {
+        OrderItem orderItem = orderItemRepository.findById(orderItemId).orElseThrow(() -> new BusinessValidationException("not found orderItem. orderItemId: " + orderItemId));
+
+
     }
 }

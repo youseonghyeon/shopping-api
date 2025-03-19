@@ -1,13 +1,7 @@
 package com.shop.shoppingapi;
 
-import com.shop.shoppingapi.entity.Order;
-import com.shop.shoppingapi.entity.Product;
-import com.shop.shoppingapi.entity.User;
-import com.shop.shoppingapi.entity.Wishlist;
-import com.shop.shoppingapi.repository.OrderRepository;
-import com.shop.shoppingapi.repository.ProductRepository;
-import com.shop.shoppingapi.repository.UserRepository;
-import com.shop.shoppingapi.repository.WishlistRepository;
+import com.shop.shoppingapi.entity.*;
+import com.shop.shoppingapi.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,9 +33,23 @@ public class IntegrationTestSupport {
 
 
     @Autowired
-    OrderRepository orderRepository;
+    private OrderRepository orderRepository;
 
     protected Order save(Order order) {
         return orderRepository.save(order);
+    }
+
+    @Autowired
+    private ReviewRepository reviewRepository;
+
+    protected void save(Review review) {
+        reviewRepository.save(review);
+    }
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
+    protected OrderItem save(OrderItem orderItem) {
+        return orderItemRepository.save(orderItem);
     }
 }

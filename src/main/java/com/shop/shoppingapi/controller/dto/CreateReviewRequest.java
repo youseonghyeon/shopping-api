@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CreateReviewRequest {
 
+    private Long orderItemId;
     private Long productId;
     private String content;
     private Integer rating;
