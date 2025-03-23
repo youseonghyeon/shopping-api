@@ -22,7 +22,7 @@ import java.util.stream.LongStream;
 
 @Slf4j
 @Configuration
-@Profile("dev")
+//@Profile("dev")
 @RequiredArgsConstructor
 public class DevDataSeeder {
 

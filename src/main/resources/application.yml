@@ -33,6 +33,15 @@ spring:
         enable.auto.commit: false
         max.poll.records: 10
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost, http://127.0.0.1, http://192.168.0.17}
 
