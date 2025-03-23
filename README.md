@@ -7,14 +7,14 @@ Spring Boot, Spring Security, Spring Data JPA/Hibernate, QueryDSL, Redis, Kafka 
 이 프로젝트는 확장성과 유지보수를 고려한 모듈화된 아키텍처로 구성되어 있으며, 프론트엔드 애플리케이션과 원활하게 통신할 수 있도록 설계되었습니다.
 
 ## 서비스 URL
-- web 서버 : http://www.ezmartket.store
+- web 서버 : [#서비스 홈페이지](http://www.ezmartket.store)
 - 스마트폰에 최적화 되어 개발되었습니다.
 
 ## 주요 기능
 - **Vue 3 를 이용한 프론트 개발**
-    - 소스 : https://github.com/youseonghyeon/shopping-vue.git
+    - 소스 : [#Vue_프론트_소스](https://github.com/youseonghyeon/shopping-vue.git)
 - **선착순 이벤트를 위한 인벤트성 아키텍처 설계 및 모듈 개발**
-    - 모듈 소스 : https://github.com/youseonghyeon/shipping-event.git
+    - 모듈 소스 : [#이벤트_모듈_소스](https://github.com/youseonghyeon/shipping-event.git)
     - L4 부하분산과 Redis Atomic 연산을 통한 이벤트 처리
 - **사용자 인증 및 권한 부여**
     - JSON 기반 로그인 및 로그아웃 API 제공
@@ -145,4 +145,57 @@ root directory
     └── nginx
         ├── access.log
         └── error.log
+```
+
+
+## 선착순 이벤트 부하 테스트 결과 [#결과 상세](https://github.com/youseonghyeon/shipping-event.git)
+- 예상 사용자 : 500명
+- db-max-connection-size: 500
+- 수행시간 : 30초
+- 준비 수량 : 1,000개
+- 요청 수 : 11,703개
+- 성공 수량 : 1000개
+- 실패 수량 : 0개
+- Redis + Lua Script를 활용하여 1,000명까지 이벤트 참여 성공
+- 테스트를 통해 이벤트 참가 제한 기능이 정확히 동작함을 검증
+- 개선 방안 : 건당 1회 db 처리 및 kafka 처리에서 50건씩 묶어 batch 처리로 변경 (I/O 감소 및 네트워크 비용감소)
+- 부하 테스트 결과 : 평균 응답 시간: 1.17초 (성공 요청 평균: 4.37초)
+```
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: event-test.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 500 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 500 looping VUs for 30s (gracefulStop: 30s)
+
+     ✗ status was 200
+      ↳  8% — ✓ 1000 / ✗ 10703
+
+     checks.........................: 8.54%  1000 out of 11703
+     data_received..................: 2.5 MB 81 kB/s
+     data_sent......................: 2.5 MB 84 kB/s
+     http_req_blocked...............: avg=16.76ms min=0s       med=12.17ms  max=105.9ms  p(90)=26.46ms p(95)=28.89ms
+     http_req_connecting............: avg=14.69ms min=0s       med=12.16ms  max=77.04ms  p(90)=26.44ms p(95)=28.52ms
+     http_req_duration..............: avg=1.17s   min=22.04ms  med=814.7ms  max=7.89s    p(90)=2.05s   p(95)=2.58s  
+       { expected_response:true }...: avg=4.37s   min=910.82ms med=2.72s    max=7.89s    p(90)=7.11s   p(95)=7.37s  
+     http_req_failed................: 91.45% 10703 out of 11703
+     http_req_receiving.............: avg=1.33ms  min=0s       med=16µs     max=332.14ms p(90)=295µs   p(95)=2.41ms 
+     http_req_sending...............: avg=8.98µs  min=1µs      med=6µs      max=1.59ms   p(90)=15µs    p(95)=23µs   
+     http_req_tls_handshaking.......: avg=0s      min=0s       med=0s       max=0s       p(90)=0s      p(95)=0s     
+     http_req_waiting...............: avg=1.17s   min=22.03ms  med=814ms    max=7.69s    p(90)=2.04s   p(95)=2.57s  
+     http_reqs......................: 11703  384.019852/s
+     iteration_duration.............: avg=1.29s   min=227.3ms  med=930.65ms max=8.09s    p(90)=2.15s   p(95)=2.68s  
+     iterations.....................: 11703  384.019852/s
+     vus............................: 500    min=500            max=500
+     vus_max........................: 500    min=500            max=500
+
+
+running (0m30.5s), 000/500 VUs, 11703 complete and 0 interrupted iterations
+default ✓ [======================================] 500 VUs  30s
 ```
