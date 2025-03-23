@@ -91,7 +91,7 @@ Spring Boot, Spring Security, Spring Data JPA/Hibernate, QueryDSL, Redis, Kafka 
 <img style="max-width: 900px;" src="diagram/shop-db.png">
 
 ## DB 스키마 (이벤트)
-<img style="max-width: 500px;" src="diagram/event-db.png">
+<img style="width: 400px;" src="diagram/event-db.png">
 
 ## Docker compose 구성
 [docker-compose.yml](docker-compose-sample.yml)
