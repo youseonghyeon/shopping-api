@@ -1,12 +1,8 @@
 package com.shop.shoppingapi.producer;
 
 import com.shop.shoppingapi.producer.dto.DeliveryMessage;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +14,7 @@ import java.util.concurrent.TimeUnit;
  * 추후 서비스의 유연성 및 확장성을 고려하여 Kafka Worker Manager를 구현합니다.
  */
 @Slf4j
-@Component
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 public class KafkaWorkerManager {
 
     private final KafkaOrderMessageQueue kafkaOrderMessageQueue;
@@ -30,9 +25,7 @@ public class KafkaWorkerManager {
 
     private final ScheduledExecutorService retryScheduler = Executors.newScheduledThreadPool(1);
 
-    /// 5초의 딜레이가 필요하므로 @PostConstruct 대신 @EventListener(ApplicationReadyEvent)를 사용합니다.
-    @EventListener(ApplicationReadyEvent.class)
-    public void kafkaOrderMessageQueueWorkerStart() {
+    public void start() {
         for (int i = 0; i < WORKER_THREAD_COUNT; i++) {
             createAndStartWorker(i);
         }
@@ -56,15 +49,10 @@ public class KafkaWorkerManager {
         monitorThread.setUncaughtExceptionHandler((t, e) -> log.error("[KafkaWorkerManager] Monitor thread crashed unexpectedly", e));
         monitorThread.start();
 
-        sleep(5000);
-        log.info("[KafkaWorkerManager] Current Kafka Thread info: monitorThread: {}, workers: {}", monitorThread, workers);
-    }
-
-    private void sleep(long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            log.error("[KafkaWorkerManager] Sleep interrupted", e);
+        if (workers.stream().allMatch(Thread::isAlive)) {
+            log.info("[KafkaWorkerManager] All Kafka worker threads successfully started.");
+        } else {
+            log.warn("[KafkaWorkerManager] Some Kafka worker threads failed to start properly.");
         }
     }
 
@@ -106,5 +94,11 @@ public class KafkaWorkerManager {
                 log.debug("[KafkaWorkerManager] Kafka message re-enqueued after retry delay.");
             }
         }, 5, TimeUnit.SECONDS);
+    }
+
+    // Kafka Worker Manager의 상태를 확인하여 모든 Worker Thread가 정상적으로 동작 중인지 확인합니다.
+    public boolean isHealthy() {
+        return workers.size() == WORKER_THREAD_COUNT &&
+                workers.stream().allMatch(t -> t != null && t.isAlive());
     }
 }

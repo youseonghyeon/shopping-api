@@ -92,8 +92,9 @@ public class SecurityConfig {
         return filterChain;
     }
 
+    /// fail-fast 방식을 사용하기위해 초기화를 진행하기 위해 빈을 직접 생성합니다.
     @Bean("rsaUtils")
-    public RsaUtils rsaUtils() {
+    public RsaUtils rsaUtils() throws IllegalStateException {
         log.trace("Initializing RsaUtils bean with private key path: {}", rsaPrivateKeyPath);
         RsaUtils rsaUtils = new RsaUtils(rsaPrivateKeyPath);
         log.trace("RsaUtils bean initialized successfully");

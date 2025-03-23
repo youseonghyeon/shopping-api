@@ -1,6 +1,9 @@
 package com.shop.shoppingapi.config;
 
 
+import com.shop.shoppingapi.producer.KafkaOrderMessageQueue;
+import com.shop.shoppingapi.producer.KafkaOrderProducer;
+import com.shop.shoppingapi.producer.KafkaWorkerManager;
 import com.shop.shoppingapi.producer.dto.DeliveryMessage;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -21,7 +24,6 @@ public class KafkaProducerConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    // 프로듀서 관련 옵션 (기본값은 필요에 따라 변경)
     @Value("${spring.kafka.producer.acks:all}")
     private String acks;
 
@@ -50,5 +52,16 @@ public class KafkaProducerConfig {
     @Bean
     public KafkaTemplate<String, DeliveryMessage> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
+    }
+
+    /// fail-fast 를 사용하여 Thread 정상 기동이 아니면 서비스 기동을 중단하도록 설정
+    @Bean(name = "kafkaWorkerManager")
+    public KafkaWorkerManager kafkaWorkerManager(KafkaOrderMessageQueue kafkaOrderMessageQueue, KafkaOrderProducer kafkaOrderProducer) {
+        KafkaWorkerManager kafkaWorkerManager = new KafkaWorkerManager(kafkaOrderMessageQueue, kafkaOrderProducer);
+        kafkaWorkerManager.start();
+        if (!kafkaWorkerManager.isHealthy()) {
+            throw new IllegalStateException("Kafka worker thread failed to start. Aborting.");
+        }
+        return kafkaWorkerManager;
     }
 }
