@@ -1,7 +1,7 @@
 package com.shop.shoppingapi.config;
 
 
-import com.shop.shoppingapi.producer.dto.KafkaMessageDtoSample;
+import com.shop.shoppingapi.producer.dto.DeliveryMessage;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +35,7 @@ public class KafkaProducerConfig {
     private int bufferMemory;
 
     @Bean
-    public ProducerFactory<String, KafkaMessageDtoSample> producerFactory() {
+    public ProducerFactory<String, DeliveryMessage> producerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.ACKS_CONFIG, acks);
@@ -48,7 +48,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, KafkaMessageDtoSample> kafkaTemplate() {
+    public KafkaTemplate<String, DeliveryMessage> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }

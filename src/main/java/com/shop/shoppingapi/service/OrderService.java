@@ -2,11 +2,13 @@ package com.shop.shoppingapi.service;
 
 import com.shop.shoppingapi.controller.dto.order.SubmitOrderRequest;
 import com.shop.shoppingapi.entity.*;
+import com.shop.shoppingapi.producer.dto.DeliveryMessage;
 import com.shop.shoppingapi.redis.CartCacheRepository;
 import com.shop.shoppingapi.repository.OrderRepository;
 import com.shop.shoppingapi.repository.ProductRepository;
 import com.shop.shoppingapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,9 @@ public class OrderService {
     private final CartCacheRepository cartCacheRepository;
     private final OrderValidationService orderValidationService;
 
+    private final ApplicationEventPublisher eventPublisher;
+
+
     @Transactional
     public Long submitOrder(Long userId, SubmitOrderRequest request) {
         User user = userRepository.findById(userId)
@@ -41,7 +46,7 @@ public class OrderService {
 
         // 3. order 엔티티 및 orderItem 엔티티 생성
         Order order = createOrderAndOrderItems(user, request);
-        Long savedOrderId = orderRepository.save(order).getId();
+        Order savedOrder = orderRepository.save(order);
 
         // 11. 사용자 포인트 차감
         user.usePoints(request.getUsedPoints());
@@ -50,7 +55,8 @@ public class OrderService {
         // 12. 장바구니 삭제 처리 (해당 상품들을 사용자 장바구니에서 삭제)
         cartCacheRepository.deleteCartItems(userId, request.getProductIds());
 
-        return savedOrderId;
+        eventPublisher.publishEvent(DeliveryMessage.toMessage(savedOrder));
+        return savedOrder.getId();
     }
 
     private Order createOrderAndOrderItems(User user, SubmitOrderRequest request) {
