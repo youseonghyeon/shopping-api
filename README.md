@@ -32,6 +32,11 @@ Spring Boot, Spring Security, Spring Data JPA/Hibernate, QueryDSL, Redis, Kafka 
 - **쿼리 캐싱 및 2차 캐싱**
     - QueryDSL 쿼리 캐싱을 이용한 상품 조회 페이지 최적화
     - Redis 캐싱을 이용한 상품 정보 조회 최적화
+-  **Kafka 설정**
+    - KRaft 기반의 단일 노드 Kafka 클러스터로 구성하여 ZooKeeper 의존 제거
+    - 최소 리소스로 경량화된 브로커 설정 적용 (1코어 2GB 환경 최적화)
+    - Spring Kafka 기반으로 메시지 전송 및 소비 구조 구현, 재시도 및 모니터링 로직 포함
+    - fail-fast 전략을 사용하여 worker 비정상 기동시 애플리케이션 종료
 
 ## 기술 스택
 
@@ -50,23 +55,6 @@ Spring Boot, Spring Security, Spring Data JPA/Hibernate, QueryDSL, Redis, Kafka 
 ## 서비스 아키텍처 설계 (DEV)
 <img style="max-width: 900px;" src="diagram/architecture_dev.png">
 
-```
-docker stats --no-stream
-CONTAINER ID   NAME             CPU %     MEM USAGE / LIMIT    MEM %     NET I/O           BLOCK I/O         PIDS
-d45fcb4089df   shopping-event   0.22%     214.3MiB / 1.91GiB   10.96%    3.12MB / 3.33MB   28MB / 29MB       36
-e413ebe10fad   vue-app          0.00%     3.848MiB / 1.91GiB   0.20%     73.3kB / 831kB    4.27MB / 172kB    2
-ec491eee585a   shopping-app     0.14%     366.6MiB / 1.91GiB   18.74%    264kB / 261kB     72.7MB / 22.9MB   35
-e5ad1d6d2540   mysql            0.33%     312.5MiB / 1.91GiB   15.98%    217kB / 163kB     46.8MB / 155MB    48
-d36c1774f575   kafka            0.73%     396.6MiB / 1.91GiB   20.27%    3.34MB / 3.12MB   40.8MB / 493MB    91
-d674d8ae1cb9   redis            0.34%     7.777MiB / 1.91GiB   0.40%     29.1kB / 74.1kB   11.8MB / 238kB    6
-
-
-top - 19:07:03 up  5:06,  2 users,  load average: 1.35, 0.76, 0.30
-Tasks: 143 total,   1 running, 142 sleeping,   0 stopped,   0 zombie
-%Cpu(s):  0.0 us,  5.3 sy,  0.0 ni, 89.5 id,  5.3 wa,  0.0 hi,  0.0 si,  0.0 st
-MiB Mem :   1956.0 total,     76.1 free,   1486.4 used,    393.5 buff/cache
-MiB Swap:   2048.0 total,   1991.0 free,     57.0 used.    315.3 avail Mem 
-```
 
 ## Kafka 기반 비동기 메시지 처리 아키텍처 개선
 
@@ -105,3 +93,56 @@ MiB Swap:   2048.0 total,   1991.0 free,     57.0 used.    315.3 avail Mem
 ## DB 스키마 (이벤트)
 <img style="max-width: 500px;" src="diagram/event-db.png">
 
+## Docker compose 구성
+[docker-compose.yml](docker-compose-sample.yml)
+
+## Container 구성 및 OS(VM) 리소스
+
+```
+docker stats --no-stream
+CONTAINER ID   NAME             CPU %     MEM USAGE / LIMIT    MEM %     NET I/O           BLOCK I/O         PIDS
+d45fcb4089df   shopping-event   0.22%     214.3MiB / 1.91GiB   10.96%    3.12MB / 3.33MB   28MB / 29MB       36
+e413ebe10fad   vue-app          0.00%     3.848MiB / 1.91GiB   0.20%     73.3kB / 831kB    4.27MB / 172kB    2
+ec491eee585a   shopping-app     0.14%     366.6MiB / 1.91GiB   18.74%    264kB / 261kB     72.7MB / 22.9MB   35
+e5ad1d6d2540   mysql            0.33%     312.5MiB / 1.91GiB   15.98%    217kB / 163kB     46.8MB / 155MB    48
+d36c1774f575   kafka            0.73%     396.6MiB / 1.91GiB   20.27%    3.34MB / 3.12MB   40.8MB / 493MB    91
+d674d8ae1cb9   redis            0.34%     7.777MiB / 1.91GiB   0.40%     29.1kB / 74.1kB   11.8MB / 238kB    6
+
+
+top - 19:07:03 up  5:06,  2 users,  load average: 1.35, 0.76, 0.30
+Tasks: 143 total,   1 running, 142 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  5.3 sy,  0.0 ni, 89.5 id,  5.3 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :   1956.0 total,     76.1 free,   1486.4 used,    393.5 buff/cache
+MiB Swap:   2048.0 total,   1991.0 free,     57.0 used.    315.3 avail Mem 
+```
+
+## OS(VM) 구조
+```
+root directory
+│
+├── app
+│   ├── config
+│   │       ├── nginx.conf
+│   │       ├── .env
+│   │       └── private_key.pem
+│   ├── docker-compose.yml
+│   └── restart.sh
+│   
+├── applog
+│   ├── api
+│   │       ├── ...
+..  │       ├── shop-api.2025-03-21.log
+    │       ├── shop-api.2025-03-22.log
+    │       ├── shop-api.log
+    │       └── simple-shop-api.log
+    ├── event
+    │       ├── ...
+    │       ├── shop-event.2025-03-22.log
+    │       └── shop-event.log
+    ├── mysql
+    │       ├── error.log
+    │       └── general.log
+    └── nginx
+        ├── access.log
+        └── error.log
+```

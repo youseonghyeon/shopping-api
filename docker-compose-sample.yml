@@ -1,5 +1,3 @@
-  version: '3.8'
-
   services:
     shopping:
       image: epfzja/shopping-app:x86_64
@@ -53,11 +51,14 @@
         - mysql
         - kafka
       environment:
+        SPRING_PROFILES_ACTIVE: prod
         SPRING_DATASOURCE_EVENT_JDBC_URL: jdbc:mysql://mysql:3306/eventdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
         SPRING_DATASOURCE_SHOP_JDBC_URL: jdbc:mysql://mysql:3306/shopdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
         SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
         SPRING_DATA_REDIS_HOST: redis
         JAVA_TOOL_OPTIONS: "-Xms100m -Xmx150m"
+      volumes:
+        - /applog/event:/applog
       networks:
         - app_network
 
@@ -116,6 +117,6 @@
       networks:
         - app_network
 
-networks:
-  app_network:
-    driver: bridge
+  networks:
+    app_network:
+      driver: bridge
