@@ -27,25 +27,21 @@ public class EventGateway {
     private final RestTemplate restTemplate;
 
     private Boolean isOpen = false;
-    // L4 로드벨런서를 가정하고 작성
-    @Value("${event.l4.ip:127.0.0.1}")
-    private String eventL4Ip;
 
-    @Value("${event.l4.port:8090}")
-    private Integer eventL4Port;
-
+    @Value("${event.l4.url}")
+    private String eventL4Url;
 
     // 이벤트가 열렸는지 확인
-    @GetMapping("/event/open")
+    @GetMapping("/open")
     public ResponseEntity<ApiResponse<Boolean>> openEvent() {
         String message = isOpen ? "이벤트가 열렸습니다." : "이벤트가 닫혔습니다.";
         return ApiResponse.success(isOpen, message);
     }
 
     // 이벤트 잔여 수량이 있는지 확인
-    @GetMapping("/event/coupon/status")
+    @GetMapping("/coupon/status")
     public ResponseEntity<ApiResponse<String>> getCoupon() {
-        String couponStatusUrl = "http://" + eventL4Ip + ":" + eventL4Port + "/api/coupon/status";
+        String couponStatusUrl = eventL4Url + "/api/coupon/status";
         String response = restTemplate.getForObject(couponStatusUrl, String.class);
         String parsedData = response; // TODO data parsing
         return ApiResponse.success(parsedData, "이벤트 페이지 접근이 가능합니다.");
@@ -69,17 +65,20 @@ public class EventGateway {
 
     @PostMapping("/ticket/apply")
     public ResponseEntity<? extends ApiResponse<?>> applyEvent() {
+        Long userId = SecurityUtils.getUserId();
+        log.info("Request to apply event: {}", userId);
         try {
-            String BASE_URL = "http://" + eventL4Ip + ":" + eventL4Port + "/event";
-            String RUN_EVENT = BASE_URL + "/ticket/apply";
-            TicketApplyRequest body = new TicketApplyRequest(SecurityUtils.getUserId(), 1, "이벤트 참여");
+            String RUN_EVENT = eventL4Url + "/event/ticket/apply";
+            TicketApplyRequest body = new TicketApplyRequest(userId, 1, "이벤트 참여");
             EventApplyResponse eventApplyResponse = restTemplate.postForObject(RUN_EVENT, body, EventApplyResponse.class);
             log.info("parsedData={}", eventApplyResponse);
             return ApiResponse.success(eventApplyResponse, "이벤트 페이지 접근이 가능합니다.");
         } catch (HttpClientErrorException e) {
             EventApplyResponse responseBodyAs = e.getResponseBodyAs(EventApplyResponse.class);
+            log.warn("{}", responseBodyAs);
             return ApiResponse.error("이벤트 참여에 실패하였습니다.", HttpStatus.BAD_REQUEST, responseBodyAs);
         } catch (Exception e) {
+            log.error("", e);
             return ApiResponse.error("이벤트 참여에 실패하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
