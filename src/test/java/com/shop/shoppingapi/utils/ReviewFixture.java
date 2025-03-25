@@ -24,13 +24,13 @@ public class ReviewFixture {
             @Nullable String content,
             @Nullable Integer rating,
             @Nullable User user,
-            @Nullable Product product
+            @Nullable Product product,
+            @Nullable OrderItem orderItem
     ) {
         content = Objects.isNull(content) ? contentMock : content;
         rating = Objects.isNull(rating) ? ratingMock : rating;
         user = Objects.requireNonNullElseGet(user, UserFixture::toUser);
         product = Objects.requireNonNullElseGet(product, ProductFixture::toProduct);
-        OrderItem orderItem = OrderItemFixture.toOrderItem(product);
 
         CreateReviewRequest createReviewRequest = toCreateReviewRequest(content, rating);
 

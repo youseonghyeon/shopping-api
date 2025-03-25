@@ -3,10 +3,12 @@ package com.shop.shoppingapi.service;
 import com.shop.shoppingapi.IntegrationTestSupport;
 import com.shop.shoppingapi.controller.dto.order.SubmitOrderRequest;
 import com.shop.shoppingapi.entity.Order;
+import com.shop.shoppingapi.entity.OrderItem;
 import com.shop.shoppingapi.entity.Product;
 import com.shop.shoppingapi.entity.User;
 import com.shop.shoppingapi.repository.OrderRepository;
 import com.shop.shoppingapi.utils.OrderFixture;
+import com.shop.shoppingapi.utils.OrderItemFixture;
 import com.shop.shoppingapi.utils.ProductFixture;
 import com.shop.shoppingapi.utils.UserFixture;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +51,7 @@ class OrderServiceTest extends IntegrationTestSupport {
     void submitOrder_Fail_InsufficientPoints() {
         // given
         User user = super.save(UserFixture.toUser(null, null, null, null, 10000, null, null));
-        Product product = super.save(ProductFixture.toProduct(null, null, null, BigDecimal.valueOf(100_100), null, null, null, 0.0));
+        Product product = super.save(ProductFixture.toProduct(null, null, null, BigDecimal.valueOf(100_000), null, null, null, 0.0));
 
         SubmitOrderRequest request = OrderFixture.toSubmitOrderRequest(null, null, 20000, BigDecimal.valueOf(100_000), BigDecimal.valueOf(3_000), BigDecimal.ZERO, BigDecimal.valueOf(83_000), product);
 
@@ -64,6 +66,8 @@ class OrderServiceTest extends IntegrationTestSupport {
         // given
         User user = super.save(UserFixture.toUser());
         Product product = super.save(ProductFixture.toProduct());
+        OrderItem orderItem = super.save(OrderItemFixture.toOrderItem(product));
+        Order order = super.save(OrderFixture.toOrder(user, orderItem));
 
         SubmitOrderRequest request = OrderFixture.toSubmitOrderRequest();
         Long orderId = orderService.submitOrder(user.getId(), request);

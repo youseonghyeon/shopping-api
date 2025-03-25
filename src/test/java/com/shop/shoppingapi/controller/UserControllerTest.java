@@ -57,7 +57,7 @@ class UserControllerTest {
                 "password123",
                 "01012345678"
         );
-        mockMvc.perform(MockMvcRequestBuilders.post("/signup")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(request)))
                 .andExpect(status().isBadRequest())
@@ -77,7 +77,7 @@ class UserControllerTest {
                 "differentPassword", // 불일치하는 비밀번호 확인
                 "01012345678"
         );
-        mockMvc.perform(MockMvcRequestBuilders.post("/signup")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(request)))
                 .andExpect(status().isBadRequest())
@@ -93,7 +93,7 @@ class UserControllerTest {
         CreateUserRequest request = new CreateUserRequest(
                 "", "", "", "", ""
         );
-        mockMvc.perform(MockMvcRequestBuilders.post("/signup")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(request)))
                 .andExpect(status().isBadRequest())

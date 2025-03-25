@@ -24,6 +24,7 @@ public class CartService {
     private final ProductService productService;
 
     public void addCartItem(Long userId, Long productId, int quantity) {
+        log.info("Adding cart item for user: {} and product: {}", userId, productId);
         if (!productService.existsProductById(productId)) {
             log.error("Product not found - productId: {}", productId);
             throw new ApiResponseException("Product not Found", HttpStatus.BAD_REQUEST);
@@ -33,6 +34,7 @@ public class CartService {
     }
 
     public void updateCartItem(Long userId, Long productId, Integer quantity) {
+        log.info("Updating cart item for user: {} and product: {}", userId, productId);
         if (quantity > 0) {
             cartCacheRepository.addOrUpdateCartItem(userId, productId, quantity);
         } else {

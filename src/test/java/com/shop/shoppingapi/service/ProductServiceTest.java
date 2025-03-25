@@ -70,7 +70,7 @@ class ProductServiceTest extends IntegrationTestSupport {
         assertEquals(product.getId(), simpleProduct.getProductId());
         // cache 확인
         Optional<SimpleProduct> cached = simpleProductCacheRepository.findById(product.getId());
-        assertTrue(cached.isEmpty(), "조회 후 자동 캐싱은 하지 않음");
+        assertTrue(cached.isPresent(), "SimpleProduct 조회시 자동 캐싱 되어야 함");
     }
 
     @Test

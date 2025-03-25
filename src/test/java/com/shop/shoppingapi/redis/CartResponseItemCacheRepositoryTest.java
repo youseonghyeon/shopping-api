@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.shop.shoppingapi.redis.dto.CartItem;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +28,7 @@ public class CartResponseItemCacheRepositoryTest {
     }
 
     @Test
+    @DisplayName("장바구니에 상품 추가 및 업데이트")
     public void testAddOrUpdateCartItem() {
         // 상품 101번을 수량 3으로 추가
         cartCacheRepository.addOrUpdateCartItem(userId, productId1, 3);
@@ -42,6 +44,7 @@ public class CartResponseItemCacheRepositoryTest {
     }
 
     @Test
+    @DisplayName("장바구니 항목 조회")
     public void testGetCartItems() {
         // 두 개의 상품 추가: 101번 수량 2, 202번 수량 4
         cartCacheRepository.addOrUpdateCartItem(userId, productId1, 2);
@@ -57,6 +60,7 @@ public class CartResponseItemCacheRepositoryTest {
     }
 
     @Test
+    @DisplayName("장바구니 항목 삭제")
     public void testRemoveCartItem() {
         // 두 개의 상품 추가
         cartCacheRepository.addOrUpdateCartItem(userId, productId1, 2);
@@ -74,6 +78,7 @@ public class CartResponseItemCacheRepositoryTest {
     }
 
     @Test
+    @DisplayName("장바구니 전체 삭제")
     public void testClearCart() {
         // 두 개의 상품 추가
         cartCacheRepository.addOrUpdateCartItem(userId, productId1, 2);

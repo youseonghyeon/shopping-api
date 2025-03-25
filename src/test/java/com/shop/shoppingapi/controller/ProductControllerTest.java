@@ -9,6 +9,7 @@ import com.shop.shoppingapi.entity.TestUtils;
 import com.shop.shoppingapi.entity.ProductConverter;
 import com.shop.shoppingapi.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -63,6 +64,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 목록 조회 성공")
     void getProducts_success() throws Exception {
         // given: Pageable 및 테스트용 Product 데이터 준비
         Pageable pageable = PageRequest.of(0, 10);
@@ -93,6 +95,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 조회 성공")
     void getProduct_success() throws Exception {
         Long productId = 1L;
         Product product = TestUtils.createProduct(productId, "상품1", "image1", "title1", new BigDecimal("1000"));
@@ -107,6 +110,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 조회 실패: 상품이 존재하지 않음")
     void getProduct_notFound() throws Exception {
         Long productId = 1L;
         when(productService.findProductById(productId)).thenReturn(Optional.empty());
@@ -117,6 +121,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 ID 목록 조회 성공")
     void getProductDetails_success() throws Exception {
         List<Long> productIds = Arrays.asList(1L, 2L);
         Product product1 = TestUtils.createProduct(1L, "상품1", "image1", "title1", new BigDecimal("1000"));
@@ -133,6 +138,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 ID 목록 조회 실패: 상품이 존재하지 않음")
     void getProductDetails_notFound() throws Exception {
         List<Long> productIds = Arrays.asList(1L, 2L);
         when(productService.findProductsByIds(productIds)).thenReturn(Collections.emptyList());
@@ -144,6 +150,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 생성 성공")
     void createProduct_success() throws Exception {
         CreateProductRequest request = new CreateProductRequest();
         // 테스트용 요청 값 설정 (필드 이름은 실제 DTO와 일치하도록 조정)
@@ -167,6 +174,7 @@ class ProductControllerTest {
 
 
     @Test
+    @DisplayName("상품 삭제 실패: 미구현")
     void createReview_notImplemented() throws Exception {
         String productId = "1";
 

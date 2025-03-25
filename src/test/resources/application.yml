@@ -38,3 +38,7 @@ cors:
 security:
   rsa:
     private-key-path: src/test/resources/test_private_key.pem
+
+event:
+  l4:
+    url: http://localhost:8090

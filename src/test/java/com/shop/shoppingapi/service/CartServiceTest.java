@@ -1,6 +1,7 @@
 package com.shop.shoppingapi.service;
 
 import com.shop.shoppingapi.controller.dto.cart.CartResponse;
+import com.shop.shoppingapi.exception.ApiResponseException;
 import com.shop.shoppingapi.redis.CartCacheRepository;
 import com.shop.shoppingapi.redis.dto.CartItem;
 import com.shop.shoppingapi.redis.dto.SimpleProduct;
@@ -57,10 +58,10 @@ class CartServiceTest {
 
         when(productService.existsProductById(productId)).thenReturn(false);
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+        ApiResponseException exception = assertThrows(ApiResponseException.class, () ->
                 cartService.addCartItem(userId, productId, quantityToAdd)
         );
-        assertEquals("존재하지 않는 상품입니다.", exception.getMessage());
+        assertEquals("Product not Found", exception.getMessage());
         verify(cartCacheRepository, never()).addOrUpdateCartItem(anyLong(), anyLong(), anyInt());
     }
 

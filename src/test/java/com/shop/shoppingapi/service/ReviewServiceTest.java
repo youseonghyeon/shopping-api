@@ -12,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,7 +32,9 @@ class ReviewServiceTest extends IntegrationTestSupport {
         Product product = ProductFixture.toProduct();
         super.save(user);
         super.save(product);
+        OrderItem orderItem = super.save(OrderItemFixture.toOrderItem(product));
         CreateReviewRequest createReviewRequest = CreateReviewRequest.builder()
+                .orderItemId(orderItem.getId())
                 .productId(product.getId())
                 .content("리뷰 내용입니다.")
                 .rating(4)
@@ -62,7 +65,7 @@ class ReviewServiceTest extends IntegrationTestSupport {
                 .rating(4)
                 .build();
         // when & then
-        assertThrows(EntityNotFoundException.class, () -> reviewService.createReview(createReviewRequest, user.getId()));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> reviewService.createReview(createReviewRequest, user.getId()));
     }
 
     @Test
@@ -77,7 +80,7 @@ class ReviewServiceTest extends IntegrationTestSupport {
                 .rating(4)
                 .build();
         // when & then
-        assertThrows(EntityNotFoundException.class, () -> reviewService.createReview(createReviewRequest, 1L));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> reviewService.createReview(createReviewRequest, 1L));
     }
 
     @Test
@@ -94,7 +97,7 @@ class ReviewServiceTest extends IntegrationTestSupport {
                 .rating(4)
                 .build();
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> reviewService.createReview(createReviewRequest, user.getId()));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> reviewService.createReview(createReviewRequest, user.getId()));
     }
 
     @Test
@@ -111,6 +114,7 @@ class ReviewServiceTest extends IntegrationTestSupport {
         super.save(order);
 
         CreateReviewRequest createReviewRequest = CreateReviewRequest.builder()
+                .orderItemId(orderItem.getId())
                 .productId(product.getId())
                 .content("리뷰 내용입니다.")
                 .rating(4)
@@ -134,7 +138,7 @@ class ReviewServiceTest extends IntegrationTestSupport {
                 .rating(-1)
                 .build();
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> reviewService.createReview(createReviewRequest, user.getId()));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> reviewService.createReview(createReviewRequest, user.getId()));
     }
 
     @Test
@@ -151,7 +155,7 @@ class ReviewServiceTest extends IntegrationTestSupport {
                 .rating(6)
                 .build();
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> reviewService.createReview(createReviewRequest, user.getId()));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> reviewService.createReview(createReviewRequest, user.getId()));
     }
 
     @Test
@@ -168,7 +172,7 @@ class ReviewServiceTest extends IntegrationTestSupport {
                 .rating(4)
                 .build();
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> reviewService.createReview(createReviewRequest, user.getId()));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> reviewService.createReview(createReviewRequest, user.getId()));
     }
 
     @Test
@@ -185,6 +189,6 @@ class ReviewServiceTest extends IntegrationTestSupport {
                 .rating(null)
                 .build();
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> reviewService.createReview(createReviewRequest, user.getId()));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> reviewService.createReview(createReviewRequest, user.getId()));
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.lang.Nullable;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class OrderFixture {
 
@@ -81,9 +82,24 @@ public class OrderFixture {
     }
 
     public static Order toOrder(User user, List<OrderItem> orderItems) {
-        return OrderConverter.toEntity("ORDER123456", user, "홍길동", "서울시 테스트구 테스트로 123",
+        int i = new Random().nextInt();
+
+
+        return OrderConverter.toEntity("ORDER" + randomLong(6), user, "홍길동", "서울시 테스트구 테스트로 123",
                 "01012345678", "문 앞에 놓아주세요.", "CARD", 0,
                 BigDecimal.valueOf(30000), BigDecimal.valueOf(3000), BigDecimal.valueOf(1000), BigDecimal.valueOf(32000), "pending", orderItems);
+    }
+
+    private static long randomLong(int size) {
+        if (size <= 0) {
+            throw new IllegalArgumentException("size must be >= 1");
+        }
+
+        int min = (int) Math.pow(10, size - 1);
+        int max = (int) Math.pow(10, size) - 1;
+
+        Random random = new Random();
+        return random.nextLong(max - min + 1) + min;
     }
 
 }

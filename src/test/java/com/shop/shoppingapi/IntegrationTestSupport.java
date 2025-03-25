@@ -42,8 +42,8 @@ public class IntegrationTestSupport {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    protected void save(Review review) {
-        reviewRepository.save(review);
+    protected Review save(Review review) {
+        return reviewRepository.save(review);
     }
 
     @Autowired
