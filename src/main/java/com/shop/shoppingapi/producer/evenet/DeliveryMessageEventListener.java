@@ -1,5 +1,6 @@
-package com.shop.shoppingapi.producer;
+package com.shop.shoppingapi.producer.evenet;
 
+import com.shop.shoppingapi.producer.KafkaOrderMessageQueue;
 import com.shop.shoppingapi.producer.dto.DeliveryMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,8 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderMessageEventListener {
+@RequiredArgsConstructor
+public class DeliveryMessageEventListener {
 
     private final KafkaOrderMessageQueue queue;
 

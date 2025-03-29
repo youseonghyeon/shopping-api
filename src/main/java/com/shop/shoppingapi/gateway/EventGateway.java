@@ -26,7 +26,7 @@ public class EventGateway {
 
     private final RestTemplate restTemplate;
 
-    private Boolean isOpen = false;
+    private Boolean isOpen = true;
 
     @Value("${event.l4.url}")
     private String eventL4Url;
@@ -65,11 +65,15 @@ public class EventGateway {
 
     @PostMapping("/ticket/apply")
     public ResponseEntity<? extends ApiResponse<?>> applyEvent() {
+        if (!isOpen) {
+            return ApiResponse.error("이벤트가 열리지 않았습니다.", HttpStatus.BAD_REQUEST);
+        }
         Long userId = SecurityUtils.getUserId();
         log.info("Request to apply event: {}", userId);
         try {
             String RUN_EVENT = eventL4Url + "/event/ticket/apply";
             TicketApplyRequest body = new TicketApplyRequest(userId, 1, "이벤트 참여");
+            log.info("request participate event. body = {}", body);
             EventApplyResponse eventApplyResponse = restTemplate.postForObject(RUN_EVENT, body, EventApplyResponse.class);
             log.info("parsedData={}", eventApplyResponse);
             return ApiResponse.success(eventApplyResponse, "이벤트 페이지 접근이 가능합니다.");

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 public class KafkaOrderProducer {
 
     private final KafkaTemplate<String, DeliveryMessage> kafkaTemplate;
